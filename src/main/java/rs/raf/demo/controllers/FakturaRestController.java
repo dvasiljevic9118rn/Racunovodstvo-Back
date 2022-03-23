@@ -63,14 +63,19 @@ public class FakturaRestController {
         }
 
         Specification<Faktura> spec = builder.build();
+
+        try{
         List<Faktura> result = fakturaService.findAll(spec);
 
-        if(result.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            if(result.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(result);
         }
-
-        return ResponseEntity.ok(result);
-
+        catch (RuntimeException e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
 }
