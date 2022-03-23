@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import rs.raf.demo.model.Faktura;
+
 import rs.raf.demo.model.TipFakture;
 import rs.raf.demo.repositories.IFakturaRepository;
 import rs.raf.demo.services.IFakturaService;

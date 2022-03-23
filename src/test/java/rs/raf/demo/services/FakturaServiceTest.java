@@ -108,6 +108,14 @@ class FakturaServiceTest {
         assertEquals(0, rezultat.size());
     }
 
+    @Test
+    void testSave() {
+        Faktura ocekivanaFaktura = new Faktura();
 
+        when(fakturaRepository.save(ocekivanaFaktura)).thenReturn(ocekivanaFaktura);
+        Faktura vracenaFaktura = fakturaService.save(ocekivanaFaktura);
+
+        assertSame(ocekivanaFaktura, vracenaFaktura);
+    }
 
 }
