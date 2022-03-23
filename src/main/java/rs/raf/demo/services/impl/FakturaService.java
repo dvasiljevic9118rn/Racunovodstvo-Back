@@ -1,10 +1,11 @@
 package rs.raf.demo.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import rs.raf.demo.model.Faktura;
 import rs.raf.demo.model.TipFakture;
-import rs.raf.demo.repositories.FakturaRepository;
+import rs.raf.demo.repositories.IFakturaRepository;
 import rs.raf.demo.services.IFakturaService;
 
 import java.util.*;
@@ -12,16 +13,21 @@ import java.util.*;
 @Service
 public class FakturaService implements IFakturaService {
 
-    private final FakturaRepository fakturaRepository;
+    private final IFakturaRepository fakturaRepository;
 
     @Autowired
-    public FakturaService(FakturaRepository fakturaRepository) {
+    public FakturaService(IFakturaRepository fakturaRepository) {
         this.fakturaRepository = fakturaRepository;
     }
 
     public List<Faktura> findAll(){
         return fakturaRepository.findAll();
     }
+
+    public List<Faktura> findAll(Specification<Faktura> spec){
+        return fakturaRepository.findAll(spec);
+    }
+
 
     public List<Faktura> findUlazneFakture(){
         List<Faktura> ulazneFakture = new ArrayList<>();
