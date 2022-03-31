@@ -3,10 +3,7 @@ package rs.raf.demo.specifications;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 
 @AllArgsConstructor
 public class RacunSpecification<T> implements Specification<T> {
@@ -17,19 +14,22 @@ public class RacunSpecification<T> implements Specification<T> {
     public Predicate toPredicate
             (Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
+        Expression<String> key = root.get(criteria.getKey());
+        Class keyType = key.getJavaType();
+
+        String value = criteria.getValue().toString();
+
         if (criteria.getOperation().equalsIgnoreCase(">")) {
-            return builder.greaterThanOrEqualTo(
-                    root.get(criteria.getKey()), criteria.getValue().toString());
+            return builder.greaterThanOrEqualTo(key,value);
         }
         else if (criteria.getOperation().equalsIgnoreCase("<")) {
-            return builder.lessThanOrEqualTo(
-                    root.get(criteria.getKey()), criteria.getValue().toString());
+            return builder.lessThanOrEqualTo(key,value);
         }
         else if (criteria.getOperation().equalsIgnoreCase(":")) {
-            if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return builder.like(
-                        root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
-            } else {
+            if ( keyType == String.class) {
+                return builder.like(key, "%" + value + "%");
+            }
+            else {
                 return builder.equal(root.get(criteria.getKey()), criteria.getValue());
             }
         }

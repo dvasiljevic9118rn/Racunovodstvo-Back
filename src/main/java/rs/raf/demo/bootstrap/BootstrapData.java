@@ -89,10 +89,15 @@ public class BootstrapData implements CommandLineRunner {
 
         Faktura f1 = getDefaultFaktura();
         f1.setIznos(1000.00);
+        f1.setTipFakture(TipFakture.IZLAZNA_FAKTURA);
+
         Faktura f2 = getDefaultFaktura();
         f2.setIznos(2000.00);
+
         Faktura f3 = getDefaultFaktura();
         f3.setIznos(3000.00);
+        f3.setTipFakture(TipFakture.IZLAZNA_FAKTURA);
+
         Faktura f4 = getDefaultFaktura();
         f4.setIznos(4000.00);
 
