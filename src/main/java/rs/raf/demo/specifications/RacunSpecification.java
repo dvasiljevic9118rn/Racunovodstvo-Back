@@ -2,37 +2,59 @@ package rs.raf.demo.specifications;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import rs.raf.demo.model.Preduzece;
+import rs.raf.demo.model.enums.TipFakture;
+import rs.raf.demo.relations.*;
 
 import javax.persistence.criteria.*;
+
+import java.util.Date;
+
 
 @AllArgsConstructor
 public class RacunSpecification<T> implements Specification<T> {
 
     private SearchCriteria criteria;
 
+
+    private RacunRelations<T> getRelations(Root<T> root, CriteriaBuilder builder, Class keyType, String key, String val){
+        if (Date.class.equals(keyType)) {
+            return new DateRelations<>(root, builder, key, val);
+        }
+        if (Long.class.equals(keyType)) {
+            return new LongRelations<>(root, builder, key, val);
+        }
+        if (String.class.equals(keyType)) {
+            return new StringRelations<>(root, builder, key, val);
+        }
+        if (Double.class.equals(keyType)) {
+            return new DoubleRelations<>(root, builder, key, val);
+        }
+        if (Preduzece.class.equals(keyType)) {
+            return new PreduzeceRelations<>(root, builder, key, val);
+        }
+        if (TipFakture.class.equals(keyType)) {
+            return new TipFaktureRelations<>(root, builder, key, val);
+        }
+        throw new RuntimeException(String.format("Josuvek nije podrzano filtriranje po tipu %s(%s)",key,keyType));
+    }
+
     @Override
     public Predicate toPredicate
             (Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
-        Expression<String> key = root.get(criteria.getKey());
-        Class keyType = key.getJavaType();
-
-        String value = criteria.getValue().toString();
+        Class keyType = root.get(criteria.getKey()).getJavaType();
+        RacunRelations<T> relations = getRelations(root,builder,keyType,criteria.getKey(),criteria.getValue().toString());
 
         if (criteria.getOperation().equalsIgnoreCase(">")) {
-            return builder.greaterThanOrEqualTo(key,value);
+            return relations.greaterThanOrEqualTo();
         }
-        else if (criteria.getOperation().equalsIgnoreCase("<")) {
-            return builder.lessThanOrEqualTo(key,value);
+        if (criteria.getOperation().equalsIgnoreCase("<")) {
+            return relations.lessThanOrEqualTo();
         }
-        else if (criteria.getOperation().equalsIgnoreCase(":")) {
-            if ( keyType == String.class) {
-                return builder.like(key, "%" + value + "%");
-            }
-            else {
-                return builder.equal(root.get(criteria.getKey()), criteria.getValue());
-            }
+        if (criteria.getOperation().equalsIgnoreCase(":")) {
+            return relations.equal();
         }
-        return null;
+        throw new RuntimeException(String.format("Nepoznata operacija \"%s\"",criteria.getOperation()));
     }
 }
