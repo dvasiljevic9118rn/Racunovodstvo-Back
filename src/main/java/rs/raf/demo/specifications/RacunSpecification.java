@@ -18,22 +18,22 @@ public class RacunSpecification<T> implements Specification<T> {
 
 
     private RacunRelations<T> getRelations(Root<T> root, CriteriaBuilder builder, Class keyType, String key, String val){
-        if (Date.class.equals(keyType)) {
+        if (Date.class == keyType) {
             return new DateRelations<>(root, builder, key, val);
         }
-        if (Long.class.equals(keyType)) {
+        if (Long.class == keyType) {
             return new LongRelations<>(root, builder, key, val);
         }
-        if (String.class.equals(keyType)) {
+        if (String.class == keyType) {
             return new StringRelations<>(root, builder, key, val);
         }
-        if (Double.class.equals(keyType)) {
+        if (Double.class == keyType) {
             return new DoubleRelations<>(root, builder, key, val);
         }
-        if (Preduzece.class.equals(keyType)) {
+        if (Preduzece.class == keyType) {
             return new PreduzeceRelations<>(root, builder, key, val);
         }
-        if (TipFakture.class.equals(keyType)) {
+        if (TipFakture.class == keyType) {
             return new TipFaktureRelations<>(root, builder, key, val);
         }
         throw new RuntimeException(String.format("Josuvek nije podrzano filtriranje po tipu %s(%s)",key,keyType));
