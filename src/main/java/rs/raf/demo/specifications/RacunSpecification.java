@@ -2,6 +2,7 @@ package rs.raf.demo.specifications;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import rs.raf.demo.model.Dokument;
 import rs.raf.demo.model.Preduzece;
 import rs.raf.demo.model.enums.TipFakture;
 import rs.raf.demo.relations.*;
@@ -33,9 +34,13 @@ public class RacunSpecification<T> implements Specification<T> {
         if (Preduzece.class == keyType) {
             return new PreduzeceRelations<>(root, builder, key, val);
         }
+        if (Dokument.class == keyType) {
+            return new DokumentRelations<>(root, builder, key, val);
+        }
         if (TipFakture.class == keyType) {
             return new TipFaktureRelations<>(root, builder, key, val);
         }
+
         throw new RuntimeException(String.format("Josuvek nije podrzano filtriranje po tipu %s(%s)",key,keyType));
     }
 
