@@ -28,7 +28,7 @@ public class MyExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({ConstraintViolationException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler({ConstraintViolationException.class})
     public final ResponseEntity<Object> handleConstraintViolation(Exception ex, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
