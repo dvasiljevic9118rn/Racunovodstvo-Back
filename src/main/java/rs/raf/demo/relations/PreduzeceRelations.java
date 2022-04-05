@@ -6,6 +6,6 @@ import javax.persistence.criteria.Root;
 public class PreduzeceRelations<T> extends ForeignKeyRelations<T>{
     public PreduzeceRelations(Root<T> root, CriteriaBuilder builder, String key, String val) {
         super(root, builder, key, val);
-        idExpression = root.get("preduzece").get("preduzeceId").as(Long.class);
+        idExpression = root.get(key).get("preduzeceId").as(Long.class);
     }
 }
