@@ -26,7 +26,7 @@ public class TipFaktureRelations<T> extends RacunRelations<T>{
     }
 
     @Override
-    public Predicate equal() {
+    public Predicate equalTo() {
         return this.builder.equal(tipFaktureExpression,tipFaktureValue);
     }
 }

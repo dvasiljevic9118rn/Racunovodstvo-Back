@@ -29,7 +29,7 @@ public class DateRelations<T> extends RacunRelations<T> {
     }
 
     @Override
-    public Predicate equal() {
+    public Predicate equalTo() {
         return this.builder.equal(dateExpression,dateValue);
     }
 }

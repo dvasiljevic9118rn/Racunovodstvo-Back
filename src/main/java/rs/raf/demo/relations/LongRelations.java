@@ -28,7 +28,7 @@ public class LongRelations<T> extends RacunRelations<T> {
     }
 
     @Override
-    public Predicate equal() {
+    public Predicate equalTo() {
         return this.builder.equal(longExpression,longValue);
     }
 }

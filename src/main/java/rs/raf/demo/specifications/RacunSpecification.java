@@ -58,7 +58,7 @@ public class RacunSpecification<T> implements Specification<T> {
             return relations.lessThanOrEqualTo();
         }
         if (criteria.getOperation().equalsIgnoreCase(":")) {
-            return relations.equal();
+            return relations.equalTo();
         }
         throw new RuntimeException(String.format("Nepoznata operacija \"%s\"",criteria.getOperation()));
     }

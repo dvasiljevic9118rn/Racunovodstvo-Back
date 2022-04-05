@@ -28,7 +28,7 @@ public class DoubleRelations<T> extends RacunRelations<T> {
     }
 
     @Override
-    public Predicate equal() {
+    public Predicate equalTo() {
         return this.builder.equal(doubleExpression,doubleValue);
     }
 }

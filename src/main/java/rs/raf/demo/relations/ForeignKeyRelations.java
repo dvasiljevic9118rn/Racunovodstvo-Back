@@ -25,7 +25,7 @@ public abstract class ForeignKeyRelations<T> extends RacunRelations<T> {
     }
 
     @Override
-    public Predicate equal() {
+    public Predicate equalTo() {
         return this.builder.equal(idExpression,id);
     }
 }

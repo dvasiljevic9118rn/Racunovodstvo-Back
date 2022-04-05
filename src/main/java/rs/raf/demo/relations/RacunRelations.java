@@ -19,5 +19,5 @@ public abstract class RacunRelations<T> {
 
     public abstract <Y extends Comparable<? super Y>> Predicate greaterThanOrEqualTo();
     public abstract <Y extends Comparable<? super Y>> Predicate lessThanOrEqualTo();
-    public abstract Predicate equal();
+    public abstract Predicate equalTo();
 }

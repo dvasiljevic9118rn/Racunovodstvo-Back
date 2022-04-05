@@ -22,7 +22,7 @@ public class StringRelations<T> extends RacunRelations<T> {
     }
 
     @Override
-    public Predicate equal() {
+    public Predicate equalTo() {
         return builder.like(stringExpression,"%"+val+"%");
     }
 }
