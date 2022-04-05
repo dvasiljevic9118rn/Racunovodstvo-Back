@@ -2,6 +2,7 @@ package rs.raf.demo.specifications;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import rs.raf.demo.exceptions.OperationNotSupportedException;
 import rs.raf.demo.model.Dokument;
 import rs.raf.demo.model.Preduzece;
 import rs.raf.demo.model.enums.TipFakture;
@@ -18,7 +19,8 @@ public class RacunSpecification<T> implements Specification<T> {
     private SearchCriteria criteria;
 
 
-    private RacunRelations<T> getRelations(Root<T> root, CriteriaBuilder builder, Class keyType, String key, String val){
+    private RacunRelations<T> getRelations(Root<T> root, CriteriaBuilder builder, Class keyType, String key, String val)
+        throws OperationNotSupportedException {
         if (Date.class == keyType) {
             return new DateRelations<>(root, builder, key, val);
         }
@@ -41,7 +43,7 @@ public class RacunSpecification<T> implements Specification<T> {
             return new TipFaktureRelations<>(root, builder, key, val);
         }
 
-        throw new RuntimeException(String.format("Josuvek nije podrzano filtriranje po tipu %s(%s)",key,keyType));
+        throw new OperationNotSupportedException(String.format("Josuvek nije podrzano filtriranje po tipu %s(%s)", key, keyType));
     }
 
     @Override
@@ -60,6 +62,6 @@ public class RacunSpecification<T> implements Specification<T> {
         if (criteria.getOperation().equalsIgnoreCase(":")) {
             return relations.equalTo();
         }
-        throw new RuntimeException(String.format("Nepoznata operacija \"%s\"",criteria.getOperation()));
+        throw new OperationNotSupportedException(String.format("Nepoznata operacija \"%s\"",criteria.getOperation()));
     }
 }

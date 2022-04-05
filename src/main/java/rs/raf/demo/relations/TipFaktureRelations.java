@@ -1,5 +1,6 @@
 package rs.raf.demo.relations;
 
+import rs.raf.demo.exceptions.OperationNotSupportedException;
 import rs.raf.demo.model.enums.TipFakture;
 
 import javax.persistence.criteria.*;
@@ -17,12 +18,12 @@ public class TipFaktureRelations<T> extends RacunRelations<T>{
 
     @Override
     public Predicate greaterThanOrEqualTo() {
-        throw new RuntimeException(String.format("Relacija > nije implementirana za TipFakture [key:%s,val%s]",key,val));
+        throw new OperationNotSupportedException(String.format("Relacija > nije implementirana za TipFakture [key:%s,val%s]", key, val));
     }
 
     @Override
     public Predicate lessThanOrEqualTo() {
-        throw new RuntimeException(String.format("Relacija < nije implementirana za TipFakture [key:%s,val%s]",key,val));
+        throw new OperationNotSupportedException(String.format("Relacija < nije implementirana za TipFakture [key:%s,val%s]",key,val));
     }
 
     @Override

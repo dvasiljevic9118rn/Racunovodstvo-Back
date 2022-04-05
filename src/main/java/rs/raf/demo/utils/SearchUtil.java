@@ -2,6 +2,7 @@ package rs.raf.demo.utils;
 
 
 import org.springframework.data.jpa.domain.Specification;
+import rs.raf.demo.exceptions.OperationNotSupportedException;
 import rs.raf.demo.specifications.RacunSpecificationsBuilder;
 
 import java.util.Arrays;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class SearchUtil<T> {
 
-    public Specification<T> getSpec(String queryString) throws RuntimeException{
+    public Specification<T> getSpec(String queryString) {
 
         List<String> operations = Arrays.asList(">","<",":");
         String regexOperations = String.join("|",operations);
@@ -22,7 +23,7 @@ public class SearchUtil<T> {
             String[] matches = condition.split(String.format("((?=%s)|(?<=%s))",regexOperations,regexOperations));
 
             if(matches.length != 3 || !operations.contains(matches[1])){
-                throw new RuntimeException("Lose formatiran uslova "+ condition);
+                throw new OperationNotSupportedException("Lose formatiran uslova "+ condition);
             }
 
             builder.with(matches[0],matches[1],matches[2]);
