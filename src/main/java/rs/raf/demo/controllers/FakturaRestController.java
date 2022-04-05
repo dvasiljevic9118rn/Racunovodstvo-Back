@@ -17,6 +17,7 @@ import rs.raf.demo.utils.ApiUtil;
 import rs.raf.demo.specifications.RacunSpecificationsBuilder;
 import rs.raf.demo.utils.SearchUtil;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -24,7 +25,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Optional;
-import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -34,49 +34,24 @@ import java.util.Map;
 public class FakturaRestController {
 
     private final IFakturaService fakturaService;
-    private final SearchUtil<Faktura> searchUtil;
 
     public FakturaRestController(FakturaService fakturaService) {
         this.fakturaService = fakturaService;
-        this.searchUtil = new SearchUtil<>();
     }
 
     @GetMapping(value = "/ulazneFakture", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getUlazneFakture() {
-
-        Specification<Faktura> spec = (root, query, cb) ->
-                cb.equal(root.get("tipFakture"), TipFakture.ULAZNA_FAKTURA);
-
-        List<Faktura> ulazneFakture = fakturaService.findAll(spec);
-        if(ulazneFakture.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }else{
-            return ResponseEntity.ok(ulazneFakture);
-        }
+        return ResponseEntity.ok(fakturaService.findUlazneFakture());
     }
 
     @GetMapping(value = "/izlazneFakture", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getIzlazneFakture() {
-
-        Specification<Faktura> spec = (root, query, cb) ->
-                cb.equal(root.get("tipFakture"), TipFakture.IZLAZNA_FAKTURA);
-
-        List<Faktura> izlazneFakture = fakturaService.findAll(spec);
-        if(izlazneFakture.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }else{
-            return ResponseEntity.ok(izlazneFakture);
-        }
+        return ResponseEntity.ok(fakturaService.findIzlazneFakture());
     }
 
     @GetMapping(value = "/sume", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getSume(@RequestParam String tipFakture){
-        Map<String, Double> sume = fakturaService.getSume(tipFakture);
-        if(!sume.isEmpty()) {
-            return ResponseEntity.ok(sume);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(fakturaService.getSume(tipFakture));
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -93,18 +68,9 @@ public class FakturaRestController {
     public ResponseEntity<?> search(@RequestParam(name = "search") String search){
         Specification<Faktura> spec = this.searchUtil.getSpec(search);
 
-        try{
-            List<Faktura> result = fakturaService.findAll(spec);
+        List<Faktura> result = fakturaService.findAll(spec);
 
-            if(result.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            return ResponseEntity.ok(result);
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -117,14 +83,19 @@ public class FakturaRestController {
         Optional<Faktura> optionalFaktura = fakturaService.findById(faktura.getDokumentId());
         if(optionalFaktura.isPresent()) {
             return ResponseEntity.ok(fakturaService.save(faktura));
-        } else {
-            return ResponseEntity.notFound().build();
         }
+
+        throw new EntityNotFoundException();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteFaktura(@PathVariable("id") Long id){
-        fakturaService.deleteById(id);
-        return ResponseEntity.ok().build();
+        Optional<Faktura> optionalFaktura = fakturaService.findById(id);
+        if (optionalFaktura.isPresent()){
+            fakturaService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+
+        throw new EntityNotFoundException();
     }
 }
