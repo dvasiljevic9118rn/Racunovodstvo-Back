@@ -11,7 +11,7 @@ public enum StatusZaposlenog {
 
     public static StatusZaposlenog valueOfLabel(String label) {
         for (StatusZaposlenog type : values()) {
-            if (type.label.equals(label)) {
+            if (type.label.equals(label.toLowerCase())) {
                 return type;
             }
         }

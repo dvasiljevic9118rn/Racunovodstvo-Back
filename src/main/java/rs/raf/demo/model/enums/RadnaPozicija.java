@@ -11,7 +11,7 @@ public enum RadnaPozicija {
 
     public static RadnaPozicija valueOfLabel(String label) {
         for (RadnaPozicija type : values()) {
-            if (type.label.equals(label)) {
+            if (type.label.equals(label.toLowerCase())) {
                 return type;
             }
         }
