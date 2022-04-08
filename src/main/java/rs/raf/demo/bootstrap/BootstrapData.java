@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import rs.raf.demo.model.*;
 import rs.raf.demo.model.enums.PolZaposlenog;
+import rs.raf.demo.model.enums.RadnaPozicija;
 import rs.raf.demo.model.enums.StatusZaposlenog;
 import rs.raf.demo.model.enums.TipDokumenta;
 import rs.raf.demo.model.enums.TipFakture;
@@ -230,6 +231,7 @@ public class BootstrapData implements CommandLineRunner {
         zaposleni.setPol(PolZaposlenog.MUSKO);
         zaposleni.setStatusZaposlenog(StatusZaposlenog.ZAPOSLEN);
         zaposleni.setDatumRodjenja(new Date());
+        zaposleni.setRadnaPozicija(RadnaPozicija.DIREKTOR);
         zaposleniRepository.save(zaposleni);
 
         Staz staz = new Staz();

@@ -7,6 +7,7 @@ import rs.raf.demo.model.Dokument;
 import rs.raf.demo.model.KontnaGrupa;
 import rs.raf.demo.model.Preduzece;
 import rs.raf.demo.model.enums.RadnaPozicija;
+import rs.raf.demo.model.enums.StatusZaposlenog;
 import rs.raf.demo.model.enums.TipFakture;
 import rs.raf.demo.relations.*;
 
@@ -50,6 +51,9 @@ public class RacunSpecification<T> implements Specification<T> {
         }
         if (RadnaPozicija.class == keyType) {
             return new RadnaPozicijaRelations(root, builder, key, val);
+        }
+        if (StatusZaposlenog.class == keyType) {
+            return new StatusZaposlenogRelations(root, builder, key, val);
         }
 
         throw new OperationNotSupportedException(String.format("Josuvek nije podrzano filtriranje po tipu %s(%s)", key, keyType));
