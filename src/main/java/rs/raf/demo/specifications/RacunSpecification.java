@@ -6,6 +6,7 @@ import rs.raf.demo.exceptions.OperationNotSupportedException;
 import rs.raf.demo.model.Dokument;
 import rs.raf.demo.model.KontnaGrupa;
 import rs.raf.demo.model.Preduzece;
+import rs.raf.demo.model.enums.RadnaPozicija;
 import rs.raf.demo.model.enums.TipFakture;
 import rs.raf.demo.relations.*;
 
@@ -46,6 +47,9 @@ public class RacunSpecification<T> implements Specification<T> {
         }
         if (KontnaGrupa.class == keyType) {
             return new KontnaGrupaRelations<>(root, builder, key, val);
+        }
+        if (RadnaPozicija.class == keyType) {
+            return new RadnaPozicijaRelations(root, builder, key, val);
         }
 
         throw new OperationNotSupportedException(String.format("Josuvek nije podrzano filtriranje po tipu %s(%s)", key, keyType));

@@ -34,7 +34,6 @@ public class Plata {
     @Column
     private String komentar;
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "zaposleniId")
     private Zaposleni zaposleni;
 

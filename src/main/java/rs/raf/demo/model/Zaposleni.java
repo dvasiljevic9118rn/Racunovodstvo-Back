@@ -51,7 +51,6 @@ public class Zaposleni {
     private String stepenObrazovanja;
     @Column
     private Long brojRadneKnjizice;
-    @JsonIgnore
     @OneToMany(mappedBy = "zaposleni")
     private List<Staz> staz;
     @Column

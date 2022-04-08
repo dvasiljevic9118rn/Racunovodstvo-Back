@@ -1,5 +1,6 @@
 package rs.raf.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ public class Staz {
     @Column
     private Date krajRada;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "zaposleniId")
     private Zaposleni zaposleni;
 }
