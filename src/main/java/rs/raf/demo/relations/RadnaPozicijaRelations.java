@@ -9,7 +9,7 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class RadnaPozicijaRelations extends RacunRelations{
+public class RadnaPozicijaRelations<T> extends RacunRelations<T>{
 
     private final Expression<RadnaPozicija> radnaPozicijaExpression;
     private final RadnaPozicija radnaPozicija;
@@ -22,12 +22,12 @@ public class RadnaPozicijaRelations extends RacunRelations{
 
     @Override
     public Predicate greaterThanOrEqualTo() {
-        throw new OperationNotSupportedException(String.format("Relacija > nije implementirana za TipFakture [key:%s,val%s]", key, val));
+        throw new OperationNotSupportedException(String.format("Relacija > nije implementirana za RadnaPozicija [key:%s,val%s]", key, val));
     }
 
     @Override
     public Predicate lessThanOrEqualTo() {
-        throw new OperationNotSupportedException(String.format("Relacija < nije implementirana za TipFakture [key:%s,val%s]",key,val));
+        throw new OperationNotSupportedException(String.format("Relacija < nije implementirana za RadnaPozicija [key:%s,val%s]",key,val));
     }
 
     @Override

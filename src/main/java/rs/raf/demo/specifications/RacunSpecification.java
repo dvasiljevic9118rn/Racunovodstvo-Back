@@ -23,55 +23,67 @@ public class RacunSpecification<T> implements Specification<T> {
     private SearchCriteria criteria;
 
 
-    private RacunRelations<T> getRelations(Root<T> root, CriteriaBuilder builder, Class keyType, String key, String val)
-        throws OperationNotSupportedException {
+    private RacunRelations<T> getRelations(Root<T> root, CriteriaBuilder builder, Class keyType, String lvl1key, String lvl2key, String val)
+            throws OperationNotSupportedException {
+
         if (Date.class == keyType) {
-            return new DateRelations<>(root, builder, key, val);
+            return new DateRelations<>(root, builder, lvl1key, val);
         }
         if (Long.class == keyType) {
-            return new LongRelations<>(root, builder, key, val);
+            return new LongRelations<>(root, builder, lvl1key, val);
         }
         if (String.class == keyType) {
-            return new StringRelations<>(root, builder, key, val);
+            return new StringRelations<>(root, builder, lvl1key, val);
         }
         if (Double.class == keyType) {
-            return new DoubleRelations<>(root, builder, key, val);
-        }
-        if (Preduzece.class == keyType) {
-            return new PreduzeceRelations<>(root, builder, key, val);
-        }
-        if (Dokument.class == keyType) {
-            return new DokumentRelations<>(root, builder, key, val);
-        }
-        if (TipFakture.class == keyType) {
-            return new TipFaktureRelations<>(root, builder, key, val);
-        }
-        if (KontnaGrupa.class == keyType) {
-            return new KontnaGrupaRelations<>(root, builder, key, val);
-        }
-        if (RadnaPozicija.class == keyType) {
-            return new RadnaPozicijaRelations(root, builder, key, val);
-        }
-        if (StatusZaposlenog.class == keyType) {
-            return new StatusZaposlenogRelations(root, builder, key, val);
+            return new DoubleRelations<>(root, builder, lvl1key, val);
         }
 
-        throw new OperationNotSupportedException(String.format("Josuvek nije podrzano filtriranje po tipu %s(%s)", key, keyType));
+        if (Preduzece.class == keyType) {
+            return new PreduzeceRelations<>(root, builder, lvl1key, lvl2key, val);
+        }
+        if (Dokument.class == keyType) {
+            return new DokumentRelations<>(root, builder, lvl1key, lvl2key, val);
+        }
+        if (KontnaGrupa.class == keyType) {
+            return new KontnaGrupaRelations<>(root, builder, lvl1key, lvl2key, val);
+        }
+
+        if (TipFakture.class == keyType) {
+            return new TipFaktureRelations<>(root, builder, lvl1key, val);
+        }
+        if (RadnaPozicija.class == keyType) {
+            return new RadnaPozicijaRelations<>(root, builder, lvl1key, val);
+        }
+        if (StatusZaposlenog.class == keyType) {
+            return new StatusZaposlenogRelations<>(root, builder, lvl1key, val);
+        }
+
+        throw new OperationNotSupportedException(String.format("Josuvek nije podrzano filtriranje po tipu %s(%s)", lvl1key, keyType));
     }
 
     @Override
     public Predicate toPredicate
             (Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
-        // mgojkovic: Poseban slucaj gde nam treba join kako bismo radili filter po poljima koja nisu kljuc,
-        // join radi samo sa equal trenutno (nezavisno od prosledjene operacije), treba generalizovati
-        if (isJoiningRequired(criteria.getKey())) {
-            Expression exception = getExpresionForJoinedTable(root);
-            return builder.equal(exception, criteria.getValue().toString());
+        String orgKey = criteria.getKey(); // sa leve str :
+        String lvl1key = orgKey;
+        String lvl2key = "";
+
+        if(orgKey.contains("_")){
+
+            String[] keys = orgKey.split("_");
+
+            if(keys.length != 2){
+                throw new RuntimeException("kljuc ne sme da sadrzi vise od jednog '_' ("+orgKey+")");
+            }
+            lvl1key = keys[0];
+            lvl2key = keys[1];
         }
 
-        Class keyType = root.get(criteria.getKey()).getJavaType();
-        RacunRelations<T> relations = getRelations(root,builder,keyType,criteria.getKey(),criteria.getValue().toString());
+        Class keyType = root.get(orgKey).getJavaType();
+
+        RacunRelations<T> relations = getRelations(root,builder,keyType,lvl1key,lvl2key,criteria.getValue().toString());
 
         if (criteria.getOperation().equalsIgnoreCase(">")) {
             return relations.greaterThanOrEqualTo();
@@ -83,16 +95,6 @@ public class RacunSpecification<T> implements Specification<T> {
             return relations.equalTo();
         }
         throw new OperationNotSupportedException(String.format("Nepoznata operacija \"%s\"",criteria.getOperation()));
-    }
-
-    private Expression getExpresionForJoinedTable(Root<T> root) {
-        String[] tableAndField = criteria.getKey().split("_");
-        Join groupJoin = root.join(tableAndField[0]);
-        return groupJoin.get(tableAndField[1]);
-    }
-
-    private boolean isJoiningRequired(String key) {
-        return key.contains("_");
     }
 
     @Override
