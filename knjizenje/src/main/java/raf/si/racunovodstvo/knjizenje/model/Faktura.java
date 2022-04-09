@@ -4,15 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import raf.si.racunovodstvo.knjizenje.model.enums.TipFakture;
 
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 @Getter
@@ -51,4 +44,6 @@ public class Faktura extends Dokument {
     @Column
     @Enumerated(EnumType.STRING)
     private TipFakture tipFakture;
+    @Column
+    private Long preduzeceId;
 }
