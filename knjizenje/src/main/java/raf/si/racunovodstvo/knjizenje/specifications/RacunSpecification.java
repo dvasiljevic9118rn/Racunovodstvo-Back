@@ -16,6 +16,7 @@ import raf.si.racunovodstvo.knjizenje.relations.StringRelations;
 import raf.si.racunovodstvo.knjizenje.relations.TipFaktureRelations;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -67,6 +68,10 @@ public class RacunSpecification<T> implements Specification<T> {
         // join radi samo sa equal trenutno (nezavisno od prosledjene operacije), treba generalizovati
         if (isJoiningRequired(criteria.getKey())) {
             Expression exception = getExpresionForJoinedTable(root);
+
+            if(criteria.getKey().toLowerCase().contains("datum")){
+                return builder.equal(exception, new Date(Long.parseLong(criteria.getValue().toString())*1000));
+            }
             return builder.equal(exception, criteria.getValue().toString());
         }
 
