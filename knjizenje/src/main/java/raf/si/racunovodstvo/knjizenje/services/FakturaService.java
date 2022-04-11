@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import raf.si.racunovodstvo.knjizenje.model.Faktura;
+import raf.si.racunovodstvo.knjizenje.model.enums.TipDokumenta;
 import raf.si.racunovodstvo.knjizenje.model.enums.TipFakture;
 import raf.si.racunovodstvo.knjizenje.repositories.FakturaRepository;
 import raf.si.racunovodstvo.knjizenje.services.impl.IFakturaService;
@@ -83,15 +84,28 @@ public class FakturaService implements IFakturaService {
     public Faktura save(Faktura faktura){
         Double prodajnaVrednost = faktura.getProdajnaVrednost();
         Double rabatProcenat = faktura.getRabatProcenat();
+
         Double porezProcenat = faktura.getPorezProcenat();
 
-        Double rabat = FakturaUtil.calculateRabat(prodajnaVrednost, rabatProcenat);
-        Double porez = FakturaUtil.calculatePorez(prodajnaVrednost, rabat, porezProcenat);
+
+
+        Double rabat = 0.0;
+        if(rabatProcenat != null){
+            rabat = FakturaUtil.calculateRabat(prodajnaVrednost, rabatProcenat);
+
+        }
+
+        Double porez = 0.0;
+        if(porezProcenat != null){
+            porez = FakturaUtil.calculatePorez(prodajnaVrednost, rabat, porezProcenat);
+        }
+
         Double iznos = FakturaUtil.calculateIznos(prodajnaVrednost, rabat, porez);
 
         faktura.setRabat(rabat);
         faktura.setPorez(porez);
         faktura.setIznos(iznos);
+        faktura.setTipDokumenta(TipDokumenta.FAKTURA);
 
         return fakturaRepository.save(faktura);
     }
