@@ -11,7 +11,7 @@ import raf.si.racunovodstvo.knjizenje.converter.BilansSchemaConverter;
 import raf.si.racunovodstvo.knjizenje.feign.PreduzeceFeignClient;
 import raf.si.racunovodstvo.knjizenje.feign.UserFeignClient;
 import raf.si.racunovodstvo.knjizenje.model.Preduzece;
-import raf.si.racunovodstvo.knjizenje.reports.ReportsConstants;
+import raf.si.racunovodstvo.knjizenje.reports.BilansTableContent;
 import raf.si.racunovodstvo.knjizenje.reports.TableReport;
 import raf.si.racunovodstvo.knjizenje.reports.schema.BilansSchema;
 import raf.si.racunovodstvo.knjizenje.responses.BilansResponse;
@@ -21,6 +21,7 @@ import raf.si.racunovodstvo.knjizenje.services.impl.IBilansService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -48,6 +49,8 @@ class IzvestajServiceTest {
     private UserResponse userResponse;
     private List<BilansResponse> bilansResponseList;
 
+    private Map<String,List<BilansResponse>> bilansResponseListMap;
+
     private static final String MOCK_NAME = "MOCK_NAME";
     private static final String MOCK_TITLE = "MOCK_TITLE";
     private static final String MOCK_BROJ_KONTA_OD = "MOCK_OD";
@@ -74,6 +77,7 @@ class IzvestajServiceTest {
                                                      String.valueOf(MOCK_DUGUJE),
                                                      String.valueOf(MOCK_POTRAZUJE),
                                                      String.valueOf(MOCK_DUGUJE - MOCK_POTRAZUJE));
+        bilansResponseListMap = Map.of("",List.of(bilansResponse));
         bilansResponseList = List.of(bilansResponse);
         given(bilansSchemaConverter.convert(bilansResponse)).willReturn(bilansSchema);
         userResponse = new UserResponse();
@@ -83,7 +87,7 @@ class IzvestajServiceTest {
     @Test
     void makeBrutoBilansTableReportTest() {
         given(bilansService.findBrutoBilans(MOCK_BROJ_KONTA_OD, MOCK_BROJ_KONTA_DO, MOCK_DATUM_OD, MOCK_DATUM_DO)).willReturn(
-            bilansResponseList);
+                bilansResponseList);
         given(userFeignClient.getCurrentUser(MOCK_TOKEN)).willReturn(ResponseEntity.ok(userResponse));
         TableReport result = (TableReport) izvestajService.makeBrutoBilansTableReport(MOCK_TOKEN,
                                                                                       MOCK_TITLE,
@@ -93,7 +97,7 @@ class IzvestajServiceTest {
                                                                                       MOCK_BROJ_KONTA_DO);
         assertEquals(MOCK_NAME, result.getAuthor());
         assertEquals(MOCK_TITLE, result.getTitle());
-        assertEquals(ReportsConstants.BILANS_COLUMNS, result.getColumns());
+        assertEquals(BilansTableContent.BILANS_COLUMNS_SINGLE_PERIOD, result.getColumns());
     }
 
     @Test
@@ -103,7 +107,7 @@ class IzvestajServiceTest {
         preduzece.setGrad(MOCK_GRAD);
         preduzece.setNaziv(MOCK_NAZIV);
         given(userFeignClient.getCurrentUser(MOCK_TOKEN)).willReturn(ResponseEntity.ok(userResponse));
-        given(bilansService.findBilans(anyList(), anyList(), anyList())).willReturn(bilansResponseList);
+        given(bilansService.findBilans(anyList(), anyList(), anyList())).willReturn(bilansResponseListMap);
         given(preduzeceFeignClient.getPreduzeceById(MOCK_PREDUZECE_ID, MOCK_TOKEN)).willReturn(ResponseEntity.ok(preduzece));
 
         TableReport result = (TableReport) izvestajService.makeBilansTableReport(MOCK_PREDUZECE_ID,
@@ -111,10 +115,10 @@ class IzvestajServiceTest {
                                                                                  MOCK_TITLE,
                                                                                  List.of(MOCK_DATUM_OD),
                                                                                  List.of(MOCK_DATUM_DO),
-                                                                                 new ArrayList<>());
+                                                                                 new ArrayList<>(),false);
         assertEquals(MOCK_NAME, result.getAuthor());
         assertEquals(MOCK_TITLE, result.getTitle());
-        assertEquals(ReportsConstants.BILANS_COLUMNS, result.getColumns());
+        assertEquals(BilansTableContent.BILANS_COLUMNS_SINGLE_PERIOD, result.getColumns());
         assertTrue(result.getFooter().contains(MOCK_ADRESA));
         assertTrue(result.getFooter().contains(MOCK_GRAD));
         assertTrue(result.getFooter().contains(MOCK_NAZIV));
