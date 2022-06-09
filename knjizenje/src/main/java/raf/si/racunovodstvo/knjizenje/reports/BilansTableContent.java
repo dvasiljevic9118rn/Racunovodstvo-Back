@@ -20,11 +20,11 @@ public class BilansTableContent {
     private String generateBalansUspeha(List<BilansResponse> bilansResponseList) {
         Double rashodi = bilansResponseList
                 .stream()
-                .filter(bilansResponse -> bilansResponse.getBrojKonta() == "5").collect(Collectors.toList()).get(0).getSaldo();
+                .filter(bilansResponse -> bilansResponse.getBrojKonta().equals("5")).collect(Collectors.toList()).get(0).getSaldo();
 
         Double prihodi = bilansResponseList
                 .stream()
-                .filter(bilansResponse -> bilansResponse.getBrojKonta() == "5").collect(Collectors.toList()).get(0).getSaldo();
+                .filter(bilansResponse -> bilansResponse.getBrojKonta().equals("5")).collect(Collectors.toList()).get(0).getSaldo();
 
         return String.format("Ukupni prihodi: %d, Ukupni rashodi: %d, Balans uspeha %d", prihodi,rashodi,prihodi-rashodi);
     }
@@ -56,13 +56,17 @@ public class BilansTableContent {
 
             BilansSchemaConverter bilansSchemaConverter = new BilansSchemaConverter();
 
-            var firstBilansResponseList =
-                    bilansResponseListMap.entrySet()
-                            .stream()
-                            .findFirst()
-                            .get().getValue();
+            var optionalFirstBilansResponseList = bilansResponseListMap.entrySet()
+                    .stream()
+                    .findFirst();
 
-                this.columns = bilansResponseListMap.size() == 1 ?
+
+            List<BilansResponse> firstBilansResponseList = new ArrayList<BilansResponse>() ;
+            if(optionalFirstBilansResponseList.isPresent()){
+                firstBilansResponseList.addAll(optionalFirstBilansResponseList.get().getValue());
+            }
+
+                this.columns = bilansResponseListMap.size() <= 1 ?
                     BILANS_COLUMNS_SINGLE_PERIOD:
                     BILANS_COLUMNS_MULTIPLE_PERIODS;
 
