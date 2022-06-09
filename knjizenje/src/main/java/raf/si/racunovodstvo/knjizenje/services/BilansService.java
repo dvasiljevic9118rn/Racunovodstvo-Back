@@ -10,21 +10,17 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static raf.si.racunovodstvo.knjizenje.utils.Utils.periodToString;
+
 @Service
 public class BilansService implements IBilansService {
 
     private final KontnaGrupaRepository kontnaGrupaRepository;
-    private  DateFormat dateFormat;
+
 
     @Autowired
     public BilansService(KontnaGrupaRepository kontnaGrupaRepository) {
         this.kontnaGrupaRepository = kontnaGrupaRepository;
-        this.dateFormat = new SimpleDateFormat("dd.mm.yyyy");
-    }
-
-    private String periodToString(Date datumOd, Date datumDo){
-        return String.format("%s-%s",dateFormat.format(datumOd),dateFormat.format(datumDo));
-
     }
 
     @Override

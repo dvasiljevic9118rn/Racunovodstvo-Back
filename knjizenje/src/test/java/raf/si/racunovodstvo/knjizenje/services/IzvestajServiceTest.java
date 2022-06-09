@@ -71,15 +71,8 @@ class IzvestajServiceTest {
     void setup() {
         BilansResponse bilansResponse = new BilansResponse(MOCK_DUGUJE, MOCK_POTRAZUJE, MOCK_BROJ_STAVKI, MOCK_BROJ_KONTA, MOCK_NAZIV);
 
-        BilansSchema bilansSchema = new BilansSchema(MOCK_BROJ_KONTA,
-                                                     String.valueOf(MOCK_BROJ_STAVKI),
-                                                     MOCK_NAZIV,
-                                                     String.valueOf(MOCK_DUGUJE),
-                                                     String.valueOf(MOCK_POTRAZUJE),
-                                                     String.valueOf(MOCK_DUGUJE - MOCK_POTRAZUJE));
         bilansResponseListMap = Map.of("",List.of(bilansResponse));
         bilansResponseList = List.of(bilansResponse);
-        given(bilansSchemaConverter.convert(bilansResponse)).willReturn(bilansSchema);
         userResponse = new UserResponse();
         userResponse.setUsername(MOCK_NAME);
     }
