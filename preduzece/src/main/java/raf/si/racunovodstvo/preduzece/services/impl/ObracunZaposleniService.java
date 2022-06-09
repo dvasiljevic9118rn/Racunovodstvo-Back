@@ -68,6 +68,8 @@ public class ObracunZaposleniService implements IObracunZaposleniService {
     public ObracunZaposleni save(ObracunZaposleniRequest obracunZaposleniRequest) {
 
         ObracunZaposleni obracunZaposleni = obracunZaposleniConverter.convert(obracunZaposleniRequest);
+        obracunZaposleni.setProknjizeno(false);
+
         if (obracunZaposleniRepository.findByZaposleniAndObracun(obracunZaposleni.getZaposleni(), obracunZaposleni.getObracun()).isPresent()) {
             throw new EntityExistsException();
         }

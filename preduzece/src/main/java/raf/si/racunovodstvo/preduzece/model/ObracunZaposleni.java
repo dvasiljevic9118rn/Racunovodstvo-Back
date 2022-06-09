@@ -45,4 +45,6 @@ public class ObracunZaposleni {
     @ManyToOne
     @JoinColumn(name = "obracunId")
     private Obracun obracun;
+    @Column
+    private Boolean proknjizeno;
 }
