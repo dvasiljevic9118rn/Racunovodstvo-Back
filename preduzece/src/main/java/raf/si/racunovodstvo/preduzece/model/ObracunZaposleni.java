@@ -1,5 +1,6 @@
 package raf.si.racunovodstvo.preduzece.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,6 +41,7 @@ public class ObracunZaposleni {
     @ManyToOne
     @JoinColumn(name = "zaposleniId")
     private Zaposleni zaposleni;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "obracunId")
     private Obracun obracun;
