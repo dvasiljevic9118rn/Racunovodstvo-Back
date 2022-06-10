@@ -66,6 +66,7 @@ public class KnjizenjeController {
         if(invalidKonto){
             throw new PersistenceException("Moguće je vršiti knjiženje samo na konta sa 3 ili više cifre.");
         }
+        return ResponseEntity.ok(knjizenjaService.save(dnevnikKnjizenja));
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
