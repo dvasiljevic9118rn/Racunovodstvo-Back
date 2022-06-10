@@ -3,6 +3,7 @@ package raf.si.racunovodstvo.preduzece.model;
 import lombok.Getter;
 import lombok.Setter;
 import raf.si.racunovodstvo.preduzece.model.enums.TipTransakcije;
+import raf.si.racunovodstvo.preduzece.responses.SifraTransakcijeResponse;
 
 import java.util.Date;
 
@@ -16,5 +17,5 @@ public class Transakcija {
     private Double iznos;
     private String sadrzaj;
     private String komentar;
-    private Long sifraTransakcije;
+    private SifraTransakcijeResponse sifraTransakcije;
 }
