@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import raf.si.racunovodstvo.knjizenje.model.Knjizenje;
+import raf.si.racunovodstvo.knjizenje.requests.KnjizenjeRequest;
 import raf.si.racunovodstvo.knjizenje.responses.AnalitickaKarticaResponse;
 import raf.si.racunovodstvo.knjizenje.responses.KnjizenjeResponse;
 import raf.si.racunovodstvo.knjizenje.services.impl.IKnjizenjeService;
@@ -65,7 +66,6 @@ public class KnjizenjeController {
         if(invalidKonto){
             throw new PersistenceException("Moguće je vršiti knjiženje samo na konta sa 3 ili više cifre.");
         }
-        return ResponseEntity.ok(knjizenjaService.save(dnevnikKnjizenja));
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -114,6 +114,10 @@ public class KnjizenjeController {
         return ResponseEntity.ok(knjizenjaService.findAllKnjizenjeResponse());
     }
 
+    @GetMapping(value = "/{id}/kontos", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getKontoByKnjizenjeId(@PathVariable Long knjizenjeId) {
+        return ResponseEntity.ok(knjizenjaService.findKontoByKnjizenjeId(knjizenjeId));
+    }
 
     @GetMapping(value = "/analitickeKartice", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<AnalitickaKarticaResponse>> getAnalitickeKartice(
