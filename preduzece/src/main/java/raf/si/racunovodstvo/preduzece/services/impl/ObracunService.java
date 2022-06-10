@@ -1,28 +1,25 @@
 package raf.si.racunovodstvo.preduzece.services.impl;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import raf.si.racunovodstvo.preduzece.feign.KnjizenjeFeignClient;
-import raf.si.racunovodstvo.preduzece.model.Knjizenje;
+import raf.si.racunovodstvo.preduzece.feign.TransakcijeFeignClient;
 import raf.si.racunovodstvo.preduzece.model.Obracun;
 import raf.si.racunovodstvo.preduzece.model.ObracunZaposleni;
+import raf.si.racunovodstvo.preduzece.model.Transakcija;
 import raf.si.racunovodstvo.preduzece.repositories.ObracunRepository;
+import raf.si.racunovodstvo.preduzece.requests.ObracunTransakcijeRequest;
 import raf.si.racunovodstvo.preduzece.services.IObracunService;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class ObracunService implements IObracunService {
 
     private final ObracunRepository obracunRepository;
-    private final KnjizenjeFeignClient knjizenjeFeignClient;
+    private final TransakcijeFeignClient transakcijeFeignClient;
 
-    public ObracunService(ObracunRepository obracunRepository, KnjizenjeFeignClient knjizenjeFeignClient){
+    public ObracunService(ObracunRepository obracunRepository, TransakcijeFeignClient transakcijeFeignClient) {
         this.obracunRepository = obracunRepository;
-        this.knjizenjeFeignClient =knjizenjeFeignClient;
+        this.transakcijeFeignClient = transakcijeFeignClient;
     }
 
     @Override
@@ -45,37 +42,65 @@ public class ObracunService implements IObracunService {
         obracunRepository.deleteById(var1);
     }
 
-    private void proknjiziObracunZaposleni(ObracunZaposleni obracunZaposleni, String token){
-        Knjizenje knjizenje = new Knjizenje();
+    private ObracunTransakcijeRequest getObracunTransakcijeRequest(ObracunZaposleni obracunZaposleni) {
 
-        ResponseEntity<?> response = knjizenjeFeignClient.createDnevnikKnjizenja(knjizenje, token);
+        ObracunTransakcijeRequest obracunTransakcijeRequest = new ObracunTransakcijeRequest();
+        obracunTransakcijeRequest.setSifraTransakcije(obracunZaposleni.getObracun().getSifraTransakcije());
+        obracunTransakcijeRequest.setDatum(new Date());
+        obracunTransakcijeRequest.setIme(obracunZaposleni.getZaposleni().getIme());
+        obracunTransakcijeRequest.setPrezime(obracunZaposleni.getZaposleni().getPrezime());
+        obracunTransakcijeRequest.setIznos(obracunZaposleni.getUkupanTrosakZarade());
+        obracunTransakcijeRequest.setPreduzeceId(obracunZaposleni.getZaposleni().getPreduzece().getPreduzeceId());
+        obracunTransakcijeRequest.setSifraZaposlenog(obracunZaposleni.getZaposleni().getZaposleniId().toString());
 
-        if(response.getStatusCode().isError()){
-            throw new RuntimeException(String.format("Knjizenje ObracunZaposleni:%s nije uspoelo", obracunZaposleni.getObracunZaposleniId().toString()));
-        }
+        return obracunTransakcijeRequest;
+
     }
 
-    public void  proknjizi(Long var1, String token){
-        Optional<Obracun> optionalObracun = obracunRepository.findById(var1);
+    public void obradiObracun(Long obracunId, String token) {
+        Optional<Obracun> optionalObracun = obracunRepository.findById(obracunId);
 
-        if(optionalObracun.isEmpty()){
-            throw new RuntimeException(String.format("Obracun sa id-jem %s ne postoji",var1));
+        if (optionalObracun.isEmpty()) {
+            throw new RuntimeException(String.format("Obracun sa id-jem %s ne postoji", obracunId));
         }
 
         Obracun obracun = optionalObracun.get();
+
+        if (obracun.isObradjen()) {
+            throw new RuntimeException("Obracun je vec obradjen");
+        }
+
         List<ObracunZaposleni> obracunZaposleniList = obracun.getObracunZaposleniList();
 
 
-        List<ObracunZaposleni> proknjizeniObracunZaposleni = obracunZaposleniList.stream().filter(obracunZaposleni -> obracunZaposleni.getProknjizeno()).collect(Collectors.toList());
-        if(!proknjizeniObracunZaposleni.isEmpty()){
-            var ids = proknjizeniObracunZaposleni.stream().map(obracunZaposleni -> obracunZaposleni.getObracunZaposleniId().toString()).collect(Collectors.toList());
-            throw new RuntimeException(String.format("Vec proknjizeni obracun Zaposleni: %s", String.join(",",ids)));
+        List<ObracunTransakcijeRequest> obracunTransakcijeRequestList = new ArrayList<>();
+
+        Map<String, ObracunZaposleni> obracunZaposleniMap = new HashMap<>();
+        for (ObracunZaposleni obracunZaposleni : obracunZaposleniList) {
+            obracunZaposleniMap.put(obracunZaposleni.getZaposleni().getZaposleniId().toString(), obracunZaposleni);
+            obracunTransakcijeRequestList.add(getObracunTransakcijeRequest(obracunZaposleni));
         }
 
-        for (var obracunZaposleni:obracunZaposleniList) {
-            proknjiziObracunZaposleni(obracunZaposleni, token);
-        }
+        List<Transakcija> transakcijaList = transakcijeFeignClient.obracunZaradeTransakcije(obracunTransakcijeRequestList, token);
 
+        if (transakcijaList.size() != obracun.getObracunZaposleniList().size()) {
+            throw new RuntimeException("Nije obradjeno sve sa obracuna");
+        }
+        for (Transakcija transakcija : transakcijaList) {
+            try {
+                String sifraZaposleni = transakcija.getBrojTransakcije().split("-")[1];
+                ObracunZaposleni obracunZaposleni = obracunZaposleniMap.get(sifraZaposleni);
+
+                if (obracunZaposleni == null) {
+                    throw new RuntimeException("Obrada nije uspela");
+                }
+            } catch (Error e) {
+                throw new RuntimeException("Obrada nije uspela");
+            }
+
+        }
+        obracun.setObradjen(true);
+        save(obracun);
     }
 
 

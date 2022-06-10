@@ -68,7 +68,6 @@ public class ObracunZaposleniService implements IObracunZaposleniService {
     public ObracunZaposleni save(ObracunZaposleniRequest obracunZaposleniRequest) {
 
         ObracunZaposleni obracunZaposleni = obracunZaposleniConverter.convert(obracunZaposleniRequest);
-        obracunZaposleni.setProknjizeno(false);
 
         if (obracunZaposleniRepository.findByZaposleniAndObracun(obracunZaposleni.getZaposleni(), obracunZaposleni.getObracun()).isPresent()) {
             throw new EntityExistsException();
@@ -88,11 +87,11 @@ public class ObracunZaposleniService implements IObracunZaposleniService {
 
         ObracunZaposleni obracunZaposleni = optionalObracunZaposleni.get();
 
-        if(ucinak != null){
+        if (ucinak != null) {
             obracunZaposleni.setUcinak(ucinak);
         }
 
-        if(netoPlata != null){
+        if (netoPlata != null) {
             obracunZaposleni.setNetoPlata(netoPlata);
         }
 
@@ -132,6 +131,7 @@ public class ObracunZaposleniService implements IObracunZaposleniService {
         Obracun obracun = new Obracun();
         obracun.setDatumObracuna(dateTime);
         obracun.setNaziv(new SimpleDateFormat("MM/yy").format(dateTime));
+        obracun.setObradjen(false);
         obracun = obracunRepository.save(obracun);
         List<Plata> plate = plataRepository.findPlataByDatumAndStatusZaposlenog(dateTime, StatusZaposlenog.ZAPOSLEN);
         List<ObracunZaposleni> obracunZaposleniList = new ArrayList<>();

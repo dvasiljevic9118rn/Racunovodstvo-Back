@@ -26,4 +26,6 @@ public class Obracun {
     @OneToMany(mappedBy = "obracun")
     @Cascade(CascadeType.ALL)
     private List<ObracunZaposleni> obracunZaposleniList;
+    @Column
+    boolean obradjen;
 }
