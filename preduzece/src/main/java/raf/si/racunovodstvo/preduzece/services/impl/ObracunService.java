@@ -2,12 +2,8 @@ package raf.si.racunovodstvo.preduzece.services.impl;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import raf.si.racunovodstvo.knjizenje.model.Dokument;
-import raf.si.racunovodstvo.knjizenje.model.Faktura;
-import raf.si.racunovodstvo.knjizenje.model.Knjizenje;
-import raf.si.racunovodstvo.knjizenje.model.enums.TipDokumenta;
-import raf.si.racunovodstvo.knjizenje.model.enums.TipFakture;
 import raf.si.racunovodstvo.preduzece.feign.KnjizenjeFeignClient;
+import raf.si.racunovodstvo.preduzece.model.Knjizenje;
 import raf.si.racunovodstvo.preduzece.model.Obracun;
 import raf.si.racunovodstvo.preduzece.model.ObracunZaposleni;
 import raf.si.racunovodstvo.preduzece.repositories.ObracunRepository;
@@ -51,13 +47,6 @@ public class ObracunService implements IObracunService {
 
     private void proknjiziObracunZaposleni(ObracunZaposleni obracunZaposleni, String token){
         Knjizenje knjizenje = new Knjizenje();
-        Faktura faktura = new Faktura();
-        faktura.setTipDokumenta(TipDokumenta.FAKTURA);
-        faktura.setPreduzeceId(obracunZaposleni.getZaposleni().getPreduzece().getPreduzeceId());
-        faktura.setTipFakture(TipFakture.ULAZNA_FAKTURA);
-        faktura.setIznos(obracunZaposleni.getUkupanTrosakZarade());
-        faktura.setDatumIzdavanja(new Date());
-
 
         ResponseEntity<?> response = knjizenjeFeignClient.createDnevnikKnjizenja(knjizenje, token);
 
@@ -66,7 +55,7 @@ public class ObracunService implements IObracunService {
         }
     }
 
-    public void proknjizi(Long var1, String token){
+    public void  proknjizi(Long var1, String token){
         Optional<Obracun> optionalObracun = obracunRepository.findById(var1);
 
         if(optionalObracun.isEmpty()){

@@ -20,7 +20,7 @@ public class Obracun {
     @Column(nullable = false)
     private String naziv;
     @Column
-    private String sifraTransakcije;
+    private Long sifraTransakcije;
     @Column(nullable = false)
     private Date datumObracuna;
     @OneToMany(mappedBy = "obracun")

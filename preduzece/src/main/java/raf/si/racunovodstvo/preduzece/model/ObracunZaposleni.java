@@ -46,5 +46,5 @@ public class ObracunZaposleni {
     @JoinColumn(name = "obracunId")
     private Obracun obracun;
     @Column
-    private Boolean proknjizeno;
+    private Long transakcijaId;
 }
