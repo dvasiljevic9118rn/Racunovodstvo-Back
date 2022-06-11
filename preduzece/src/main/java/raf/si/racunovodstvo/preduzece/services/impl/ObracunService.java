@@ -1,5 +1,6 @@
 package raf.si.racunovodstvo.preduzece.services.impl;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import raf.si.racunovodstvo.preduzece.feign.TransakcijeFeignClient;
 import raf.si.racunovodstvo.preduzece.model.Obracun;
@@ -81,10 +82,16 @@ public class ObracunService implements IObracunService {
             obracunTransakcijeRequestList.add(getObracunTransakcijeRequest(obracunZaposleni));
         }
 
-        List<Transakcija> transakcijaList = transakcijeFeignClient.obracunZaradeTransakcije(obracunTransakcijeRequestList, token);
+        ResponseEntity<List<Transakcija>> response = transakcijeFeignClient.obracunZaradeTransakcije(obracunTransakcijeRequestList, token);
 
-        if (transakcijaList.size() != obracun.getObracunZaposleniList().size()) {
-            throw new RuntimeException("Nije obradjeno sve sa obracuna");
+        if(response.getStatusCodeValue() != 200){
+            throw new RuntimeException("Obrada nije uspela - dovlacenje transakcija nije uspelo");
+        }
+
+        List<Transakcija> transakcijaList = response.getBody();
+
+        if (transakcijaList == null || transakcijaList.size() != obracun.getObracunZaposleniList().size()) {
+            throw new RuntimeException("Obrada nije uspela");
         }
         for (Transakcija transakcija : transakcijaList) {
             try {
@@ -97,7 +104,6 @@ public class ObracunService implements IObracunService {
             } catch (Error e) {
                 throw new RuntimeException("Obrada nije uspela");
             }
-
         }
         obracun.setObradjen(true);
         save(obracun);
