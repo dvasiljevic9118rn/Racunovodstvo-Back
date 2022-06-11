@@ -127,11 +127,12 @@ public class ObracunZaposleniService implements IObracunZaposleniService {
         obracunZaposleni.setUkupanTrosakZarade(obracunZaposleni.getBrutoPlata() + obracunZaposleni.getDoprinos2());
     }
 
-    public void makeObracun(Date dateTime) {
+    public void makeObracun(Date dateTime, long sifraTransakcijeId) {
         Obracun obracun = new Obracun();
         obracun.setDatumObracuna(dateTime);
         obracun.setNaziv(new SimpleDateFormat("MM/yy").format(dateTime));
         obracun.setObradjen(false);
+        obracun.setSifraTransakcije(sifraTransakcijeId);
         obracun = obracunRepository.save(obracun);
         List<Plata> plate = plataRepository.findPlataByDatumAndStatusZaposlenog(dateTime, StatusZaposlenog.ZAPOSLEN);
         List<ObracunZaposleni> obracunZaposleniList = new ArrayList<>();

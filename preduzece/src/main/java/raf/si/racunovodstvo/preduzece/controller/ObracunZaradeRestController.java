@@ -27,5 +27,16 @@ public class ObracunZaradeRestController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PostMapping(value = "/{sifraTransakcijeId}")
+    public ResponseEntity<?> changeSifraTransakcijeId(@PathVariable Integer sifraTransakcijeId) {
+        try {
+            obracunZaradeJob.setSifraTransakcijeId(sifraTransakcijeId);
+            return ResponseEntity.ok().build();
+        } catch (DateTimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }
 

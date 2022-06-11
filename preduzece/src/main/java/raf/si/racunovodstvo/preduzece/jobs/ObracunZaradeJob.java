@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class ObracunZaradeJob {
     final ObracunZaposleniService obracunZaposleniService;
+
     private ZonedDateTime nextDate;
 
     /**
@@ -35,6 +36,12 @@ public class ObracunZaradeJob {
                         + yearMonth.lengthOfMonth()
                         + "] u sledecoj iteraciji job-a.");
     }
+    @Getter
+    private long sifraTransakcijeId;
+
+    public void setSifraTransakcijeId(long sifraTransakcijeId) {
+        this.sifraTransakcijeId = sifraTransakcijeId;
+    }
 
     @Autowired
     public ObracunZaradeJob(ObracunZaposleniService obracunZaposleniService) {
@@ -51,7 +58,7 @@ public class ObracunZaradeJob {
                 nextDate = now.plusMonths(1).withDayOfMonth(dayOfMonth);
                 long delay = now.until(nextDate, ChronoUnit.MILLIS);
                 try {
-                    obracunZaposleniService.makeObracun(Date.from(now.toInstant()));
+                    obracunZaposleniService.makeObracun(Date.from(now.toInstant()), sifraTransakcijeId);
                 } finally {
                     executor.schedule(this, delay, TimeUnit.MILLISECONDS);
                 }
