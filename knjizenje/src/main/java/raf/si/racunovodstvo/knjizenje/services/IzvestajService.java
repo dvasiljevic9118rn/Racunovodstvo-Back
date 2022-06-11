@@ -76,4 +76,9 @@ public class IzvestajService implements IIzvestajService {
         UserResponse user = userFeignClient.getCurrentUser(token).getBody();
         return user == null ? "" : user.getUsername();
     }
+
+    public Reports makePromenaNaKapitalTableReport(int godina1, int godina2, String opis) {
+        PromenaNaKapitalHelper promenaNaKapitalHelper = new PromenaNaKapitalHelper(godina1, godina2, opis, bilansService);
+        return promenaNaKapitalHelper.makePromenaNaKapitalTableReport();
+    }
 }
