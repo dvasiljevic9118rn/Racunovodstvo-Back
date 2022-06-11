@@ -39,9 +39,15 @@ public class ObracunZaradeRestController {
             if(response.getStatusCodeValue() != 200){
                 throw new EntityNotFoundException();
             }
+
+            obracunZaradeJob.setSifraTransakcijeId(obracunZaradeConfigRequest.getSifraTransakcijeId());
+            obracunZaradeJob.setDayOfMonth(obracunZaradeConfigRequest.getDayOfMonth());
+
             ObracunZaradeConfigResponse obracunZaradeConfigResponse = new ObracunZaradeConfigResponse();
             obracunZaradeConfigResponse.setSifraTransakcije(response.getBody());
             obracunZaradeConfigResponse.setDayOfMonth(obracunZaradeConfigRequest.getDayOfMonth());
+
+
             return ResponseEntity.ok(obracunZaradeConfigResponse);
 
         } catch (DateTimeException e) {

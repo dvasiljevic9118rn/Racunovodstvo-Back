@@ -42,7 +42,7 @@ public class ObracunZaposleniService implements IObracunZaposleniService {
 
     @Override
     public <S extends ObracunZaposleni> S save(S var1) {
-        return obracunZaposleniRepository.save(var1);
+        return null;
     }
 
     @Override
@@ -127,7 +127,7 @@ public class ObracunZaposleniService implements IObracunZaposleniService {
         obracunZaposleni.setUkupanTrosakZarade(obracunZaposleni.getBrutoPlata() + obracunZaposleni.getDoprinos2());
     }
 
-    public void makeObracun(Date dateTime, long sifraTransakcijeId) {
+    public Obracun makeObracun(Date dateTime, long sifraTransakcijeId) {
         Obracun obracun = new Obracun();
         obracun.setDatumObracuna(dateTime);
         obracun.setNaziv(new SimpleDateFormat("MM/yy").format(dateTime));
@@ -141,7 +141,9 @@ public class ObracunZaposleniService implements IObracunZaposleniService {
             obracunZaposleniList.add(obracunZaposleni);
         }
         obracun.setObracunZaposleniList(obracunZaposleniList);
-        obracunRepository.save(obracun);
+        obracun = obracunRepository.save(obracun);
+
+        return obracun;
     }
 
     private ObracunZaposleniRequest makeObracunZaradeObject(Plata plata, Long obracunId) {

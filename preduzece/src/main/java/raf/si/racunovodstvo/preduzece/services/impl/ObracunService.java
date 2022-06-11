@@ -2,7 +2,10 @@ package raf.si.racunovodstvo.preduzece.services.impl;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import raf.si.racunovodstvo.preduzece.feign.TransakcijeFeignClient;
+import raf.si.racunovodstvo.preduzece.jobs.ObracunZaradeJob;
 import raf.si.racunovodstvo.preduzece.model.Obracun;
 import raf.si.racunovodstvo.preduzece.model.ObracunZaposleni;
 import raf.si.racunovodstvo.preduzece.model.Transakcija;
@@ -18,9 +21,11 @@ public class ObracunService implements IObracunService {
     private final ObracunRepository obracunRepository;
     private final TransakcijeFeignClient transakcijeFeignClient;
 
-    public ObracunService(ObracunRepository obracunRepository, TransakcijeFeignClient transakcijeFeignClient) {
+    private final ObracunZaradeJob obracunZaradeJob;
+    public ObracunService(ObracunRepository obracunRepository, TransakcijeFeignClient transakcijeFeignClient, ObracunZaradeJob obracunZaradeJob, ObracunZaposleniService obracunZaposleniService) {
         this.obracunRepository = obracunRepository;
         this.transakcijeFeignClient = transakcijeFeignClient;
+        this.obracunZaradeJob = obracunZaradeJob;
     }
 
     @Override
@@ -46,19 +51,20 @@ public class ObracunService implements IObracunService {
     private ObracunTransakcijeRequest getObracunTransakcijeRequest(ObracunZaposleni obracunZaposleni) {
 
         ObracunTransakcijeRequest obracunTransakcijeRequest = new ObracunTransakcijeRequest();
-        obracunTransakcijeRequest.setSifraTransakcije(obracunZaposleni.getObracun().getSifraTransakcije());
         obracunTransakcijeRequest.setDatum(new Date());
         obracunTransakcijeRequest.setIme(obracunZaposleni.getZaposleni().getIme());
         obracunTransakcijeRequest.setPrezime(obracunZaposleni.getZaposleni().getPrezime());
         obracunTransakcijeRequest.setIznos(obracunZaposleni.getUkupanTrosakZarade());
         obracunTransakcijeRequest.setPreduzeceId(obracunZaposleni.getZaposleni().getPreduzece().getPreduzeceId());
         obracunTransakcijeRequest.setSifraZaposlenog(obracunZaposleni.getZaposleni().getZaposleniId().toString());
+        obracunTransakcijeRequest.setSifraTransakcijeId(obracunZaposleni.getObracun().getSifraTransakcije());
 
         return obracunTransakcijeRequest;
 
     }
-
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void obradiObracun(Long obracunId, String token) {
+
         Optional<Obracun> optionalObracun = obracunRepository.findById(obracunId);
 
         if (optionalObracun.isEmpty()) {
@@ -79,6 +85,8 @@ public class ObracunService implements IObracunService {
         Map<String, ObracunZaposleni> obracunZaposleniMap = new HashMap<>();
         for (ObracunZaposleni obracunZaposleni : obracunZaposleniList) {
             obracunZaposleniMap.put(obracunZaposleni.getZaposleni().getZaposleniId().toString(), obracunZaposleni);
+
+
             obracunTransakcijeRequestList.add(getObracunTransakcijeRequest(obracunZaposleni));
         }
 

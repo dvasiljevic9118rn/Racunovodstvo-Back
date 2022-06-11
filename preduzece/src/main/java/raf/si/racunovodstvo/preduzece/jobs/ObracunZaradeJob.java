@@ -3,6 +3,7 @@ package raf.si.racunovodstvo.preduzece.jobs;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import raf.si.racunovodstvo.preduzece.model.ObracunZaposleni;
 import raf.si.racunovodstvo.preduzece.services.impl.ObracunZaposleniService;
 
 import java.time.DateTimeException;
@@ -15,7 +16,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class ObracunZaradeJob {
+public class  ObracunZaradeJob {
     final ObracunZaposleniService obracunZaposleniService;
 
     private ZonedDateTime nextDate;
@@ -27,6 +28,19 @@ public class ObracunZaradeJob {
     private int dayOfMonth = JobConstants.DEFAULT_DAY_OF_MONTH;
 
     public void setDayOfMonth(int dayOfMonth) throws DateTimeException {
+
+        if(nextDate == null){
+
+            ZonedDateTime now = ZonedDateTime.now();
+
+            if (now.getDayOfMonth() >= dayOfMonth){
+                nextDate = now.plusMonths(1).withDayOfMonth(dayOfMonth);
+            }
+            else{
+                nextDate = now.withDayOfMonth(dayOfMonth);
+            }
+
+        }
         YearMonth yearMonth = YearMonth.of(nextDate.getYear(), nextDate.getMonthValue());
         if (yearMonth.lengthOfMonth() >= dayOfMonth)
             this.dayOfMonth = dayOfMonth;
