@@ -42,7 +42,7 @@ public class ObracunZaposleniService implements IObracunZaposleniService {
 
     @Override
     public <S extends ObracunZaposleni> S save(S var1) {
-        return null;
+        return obracunZaposleniRepository.save(var1);
     }
 
     @Override
