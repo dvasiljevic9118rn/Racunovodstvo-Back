@@ -17,8 +17,10 @@ import raf.si.racunovodstvo.knjizenje.utils.SearchUtil;
 import raf.si.racunovodstvo.knjizenje.validation.groups.OnCreate;
 import raf.si.racunovodstvo.knjizenje.validation.groups.OnUpdate;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -60,5 +62,15 @@ public class SifraTransakcijeController {
     public ResponseEntity<String> delete(@PathVariable("sifraTransakcijeId") Long sifraTransakcijeId) {
         sifraTransakcijeService.deleteById(sifraTransakcijeId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        Optional<SifraTransakcije> optionalSifraTransakcije = sifraTransakcijeService.findById(id);
+        if (optionalSifraTransakcije.isPresent()) {
+            return ResponseEntity.ok(optionalSifraTransakcije.get());
+        }
+
+        throw new EntityNotFoundException();
     }
 }
