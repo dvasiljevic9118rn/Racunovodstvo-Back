@@ -1,7 +1,5 @@
 package raf.si.racunovodstvo.knjizenje.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,18 +33,17 @@ public class KnjizenjeService implements IKnjizenjeService {
     private final KontoService kontoService;
     private final IConverter<Knjizenje, AnalitickaKarticaResponse> analitickaKarticaConverter;
 
-    @Lazy
-    @Autowired
     private KnjizenjeConverter knjizenjeConverter;
 
     public KnjizenjeService(KnjizenjeRepository knjizenjeRepository,
                             DokumentRepository dokumentRepository,
                             KontoService kontoService,
-                            AnalitickaKarticaConverter analitickaKarticaConverter) {
+                            AnalitickaKarticaConverter analitickaKarticaConverter, KnjizenjeConverter knjizenjeConverter) {
         this.knjizenjeRepository = knjizenjeRepository;
         this.dokumentRepository = dokumentRepository;
         this.kontoService = kontoService;
         this.analitickaKarticaConverter = analitickaKarticaConverter;
+        this.knjizenjeConverter = knjizenjeConverter;
     }
 
     @Override
