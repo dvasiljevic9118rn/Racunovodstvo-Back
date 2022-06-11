@@ -18,7 +18,7 @@ public class ObracunZaradeRestController {
         this.obracunZaradeJob = obracunZaradeJob;
     }
 
-    @PostMapping(value = "/{dan}")
+    @PostMapping(value = "/dan/{dan}")
     public ResponseEntity<?> changeJobDayOfMonth(@PathVariable Integer dan) {
         try {
             obracunZaradeJob.setDayOfMonth(dan);
@@ -28,7 +28,7 @@ public class ObracunZaradeRestController {
         }
     }
 
-    @PostMapping(value = "/{sifraTransakcijeId}")
+    @PostMapping(value = "sifraTransakcijeId/{sifraTransakcijeId}")
     public ResponseEntity<?> changeSifraTransakcijeId(@PathVariable Integer sifraTransakcijeId) {
         try {
             obracunZaradeJob.setSifraTransakcijeId(sifraTransakcijeId);
