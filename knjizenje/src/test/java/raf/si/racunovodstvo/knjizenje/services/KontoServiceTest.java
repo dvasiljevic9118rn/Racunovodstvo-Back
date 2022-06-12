@@ -9,7 +9,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import raf.si.racunovodstvo.knjizenje.converters.impl.KontoConverter;
+import raf.si.racunovodstvo.knjizenje.model.KontnaGrupa;
 import raf.si.racunovodstvo.knjizenje.model.Konto;
+import raf.si.racunovodstvo.knjizenje.repositories.KontnaGrupaRepository;
 import raf.si.racunovodstvo.knjizenje.repositories.KontoRepository;
 import raf.si.racunovodstvo.knjizenje.responses.GlavnaKnjigaResponse;
 import raf.si.racunovodstvo.knjizenje.specifications.RacunSpecification;
@@ -58,14 +60,6 @@ class KontoServiceTest {
         given(kontoRepository.findKontoByKontnaGrupaBrojKonta(MOCK_BROJ_KONTA)).willReturn(kontoList);
 
         assertEquals(kontoList, kontoService.findByKontnaGrupa(MOCK_BROJ_KONTA));
-    }
-
-    @Test
-    void testSave() {
-        Konto konto = new Konto();
-        given(kontoRepository.save(konto)).willReturn(konto);
-
-        assertEquals(konto, kontoService.save(konto));
     }
 
     @Test
