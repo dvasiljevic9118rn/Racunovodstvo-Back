@@ -289,7 +289,22 @@ public class BootstrapData implements CommandLineRunner {
         kg601.setBrojKonta("601");
         kg601.setNazivKonta("Naziv kontne grupe 601");
 
-        this.kontnaGrupaRepository.saveAll(Arrays.asList(kg5t,kg51,kg511,kg52,kg50,kg521,kg5t,kg51,kg511,kg62,kg60,kg601));
+
+        KontnaGrupa kg6t = new KontnaGrupa();
+        kg6t.setBrojKonta("6");
+        kg6t.setNazivKonta("Naziv kontne grupe 6");
+
+        KontnaGrupa kg61 = new KontnaGrupa();
+        kg61.setBrojKonta("61");
+        kg61.setNazivKonta("Naziv kontne grupe 61");
+
+        KontnaGrupa kg611 = new KontnaGrupa();
+        kg611.setBrojKonta("611");
+        kg611.setNazivKonta("Naziv kontne grupe 511");
+
+
+        this.kontnaGrupaRepository.saveAll(Arrays.asList(kg5t,kg51,kg511,kg52,kg50,kg521,kg5t,kg51,kg511,kg62,kg60,kg601,kg6t,kg61,kg611));
+        this.kontnaGrupaRepository.saveAll(Arrays.asList(kg3t, kg30, kg301, kg302, kg306, kg309, kg31, kg32, kg33, kg34, kg35));
 
         Knjizenje knj1 = new Knjizenje();
         knj1.setBrojNaloga("N123S3");
