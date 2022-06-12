@@ -137,7 +137,7 @@ public class ObracunZaposleniService implements IObracunZaposleniService {
         List<Plata> plate = plataRepository.findPlataByDatumAndStatusZaposlenog(dateTime, StatusZaposlenog.ZAPOSLEN);
         List<ObracunZaposleni> obracunZaposleniList = new ArrayList<>();
         for (Plata plata : plate) {
-            ObracunZaposleni obracunZaposleni = save(obracunZaposleniConverter.convert(makeObracunZaradeObject(plata, obracun.getObracunId())));
+            ObracunZaposleni obracunZaposleni = save(makeObracunZaradeObject(plata, obracun.getObracunId()));
             obracunZaposleniList.add(obracunZaposleni);
         }
         obracun.setObracunZaposleniList(obracunZaposleniList);

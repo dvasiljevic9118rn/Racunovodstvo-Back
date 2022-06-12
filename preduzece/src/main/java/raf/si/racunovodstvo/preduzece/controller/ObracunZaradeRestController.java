@@ -58,6 +58,10 @@ public class ObracunZaradeRestController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ObracunZaradeConfigResponse> getConfig( @RequestHeader("Authorization") String token) {
 
+
+        if(obracunZaradeJob.getSifraTransakcijeId() == 0){
+            throw new RuntimeException("Nije postavljena sifra transakcije!");
+        }
         ResponseEntity<SifraTransakcijeResponse> response = transakcijeFeignClient.getById(obracunZaradeJob.getSifraTransakcijeId(), token);
 
         if(response.getStatusCodeValue() != 200){

@@ -26,23 +26,18 @@ public class BootstrapData implements CommandLineRunner {
     private final StazRepository stazRepository;
     private final PlataRepository plataRepository;
     private final KoeficijentRepository koeficijentRepository;
-    private final ObracunRepository obracunRepository;
-    private final ObracunZaposleniRepository obracunZaposleniRepository;
-
     private final ObracunZaposleniService obracunZaposleniService;
 
     public BootstrapData(PreduzeceRepository preduzeceRepository,
                          ZaposleniRepository zaposleniRepository,
                          StazRepository stazRepository,
                          PlataRepository plataRepository,
-                         KoeficijentRepository koeficijentRepository, ObracunRepository obracunRepository, ObracunZaposleniRepository obracunZaposleniRepository, ObracunZaposleniService obracunZaposleniService) {
+                         KoeficijentRepository koeficijentRepository, ObracunZaposleniService obracunZaposleniService) {
         this.preduzeceRepository = preduzeceRepository;
         this.zaposleniRepository = zaposleniRepository;
         this.stazRepository = stazRepository;
         this.plataRepository = plataRepository;
         this.koeficijentRepository = koeficijentRepository;
-        this.obracunRepository = obracunRepository;
-        this.obracunZaposleniRepository = obracunZaposleniRepository;
         this.obracunZaposleniService = obracunZaposleniService;
     }
 
@@ -150,17 +145,7 @@ public class BootstrapData implements CommandLineRunner {
         koeficijent.setPoreskoOslobadjanje(23.4);
         koeficijentRepository.save(koeficijent);
 
-        Obracun obracun = new Obracun();
-        obracun.setNaziv("Obracun 1");
-        obracun.setDatumObracuna(new Date());
-        obracunRepository.save(obracun);
-
-        ObracunZaposleni obracunZaposleni = new ObracunZaposleni();
-        obracunZaposleni.setObracun(obracun);
-        obracunZaposleni.setZaposleni(zaposleni);
-        obracunZaposleni.setNetoPlata(plata2.getNetoPlata());
-        obracunZaposleni.setUcinak(0.5);
-        obracunZaposleniRepository.save(obracunZaposleni);
+       obracunZaposleniService.makeObracun(new Date(), 1);
 
         log.info("Data loaded!");
     }

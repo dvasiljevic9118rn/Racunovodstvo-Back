@@ -75,6 +75,10 @@ public class ObracunService implements IObracunService {
             throw new RuntimeException("Obracun je vec obradjen");
         }
 
+        if(obracun.getSifraTransakcije() == 0){
+            throw new RuntimeException("Nije postavljena sifra transakcije!");
+        }
+
         List<ObracunZaposleni> obracunZaposleniList = obracun.getObracunZaposleniList();
 
 
