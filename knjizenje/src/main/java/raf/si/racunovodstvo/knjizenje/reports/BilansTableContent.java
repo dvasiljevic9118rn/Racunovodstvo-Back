@@ -30,9 +30,9 @@ public class BilansTableContent {
                 .filter(bilansResponse -> bilansResponse.getBrojKonta().equals("6"))
                 .collect(Collectors.toList());
 
-        Double prihodi = bilansPrihodiList.size() == 0 ? 0: bilansRashodiList.get(0).getSaldo();
+        Double prihodi = bilansPrihodiList.size() == 0 ? 0: bilansPrihodiList.get(0).getSaldo();
 
-        return String.format("Ukupni prihodi: %1$,.2f, Ukupni rashodi: %1$,.2f, Balans uspeha %1$,.2f", prihodi,rashodi,prihodi-rashodi);
+        return String.format("Ukupni prihodi: %1$,.2f, Ukupni rashodi: %2$,.2f, Balans uspeha %3$,.2f", prihodi,rashodi,prihodi-rashodi);
     }
     private String generateSumsString(List<BilansResponse> bilansResponseList) {
         Long brojStavki = 0L;

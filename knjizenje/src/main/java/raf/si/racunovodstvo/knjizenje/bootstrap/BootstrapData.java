@@ -179,52 +179,9 @@ public class BootstrapData implements CommandLineRunner {
         KontnaGrupa kg1 = new KontnaGrupa();
         kg1.setBrojKonta("0");
         kg1.setNazivKonta("Naziv kontne grupe 0");
-        KontnaGrupa kg2 = new KontnaGrupa();
-        kg2.setBrojKonta("1");
-        kg2.setNazivKonta("Naziv kontne grupe 1");
-        KontnaGrupa kg3 = new KontnaGrupa();
-        kg3.setBrojKonta("01");
-        kg3.setNazivKonta("Naziv kontne grupe 01");
-        KontnaGrupa kg4 = new KontnaGrupa();
-        kg4.setBrojKonta("010");
-        kg4.setNazivKonta("Naziv kontne grupe 010");
-        KontnaGrupa kg5 = new KontnaGrupa();
-        kg5.setBrojKonta("0101");
-        kg5.setNazivKonta("Naziv kontne grupe 0101");
-        KontnaGrupa kg6 = new KontnaGrupa();
-        kg6.setBrojKonta("01011");
-        kg6.setNazivKonta("Naziv kontne grupe 01011");
-        KontnaGrupa kg7 = new KontnaGrupa();
-        kg7.setBrojKonta("12");
-        kg7.setNazivKonta("Naziv kontne grupe 12");
-        KontnaGrupa kg8 = new KontnaGrupa();
-        kg8.setBrojKonta("10");
-        kg8.setNazivKonta("Naziv kontne grupe 10");
-        KontnaGrupa kg9 = new KontnaGrupa();
-        kg9.setBrojKonta("2");
-        kg9.setNazivKonta("Naziv kontne grupe 2");
-        KontnaGrupa kg10 = new KontnaGrupa();
-        kg10.setBrojKonta("02");
-        kg10.setNazivKonta("Naziv kontne grupe 02");
-        KontnaGrupa kg11 = new KontnaGrupa();
-        kg11.setBrojKonta("21");
-        kg11.setNazivKonta("Naziv kontne grupe 21");
-        KontnaGrupa kg12 = new KontnaGrupa();
-        kg12.setBrojKonta("120");
-        kg12.setNazivKonta("Naziv kontne grupe 120");
-        KontnaGrupa kg13 = new KontnaGrupa();
-        kg13.setBrojKonta("00");
-        kg13.setNazivKonta("Naziv kontne grupe 00");
-        KontnaGrupa kg14 = new KontnaGrupa();
-        kg14.setBrojKonta("000");
-        kg14.setNazivKonta("Naziv kontne grupe 000");
-        KontnaGrupa kg15 = new KontnaGrupa();
-        kg15.setBrojKonta("0001");
-        kg15.setNazivKonta("Naziv kontne grupe 0001");
-        KontnaGrupa kg16 = new KontnaGrupa();
-        kg16.setBrojKonta("0001");
-        kg16.setNazivKonta("Naziv kontne grupe 0001");
-        this.kontnaGrupaRepository.saveAll(Arrays.asList(kg1, kg2, kg3, kg4, kg5, kg6, kg7, kg8, kg9, kg10, kg11, kg12, kg13, kg14, kg15, kg16));
+
+         this.kontnaGrupaRepository.save(kg1);
+
         KontnaGrupa kg3t = new KontnaGrupa();
         kg3t.setBrojKonta("3");
         kg3t.setNazivKonta("Naziv kontne grupe 3");
@@ -246,19 +203,34 @@ public class BootstrapData implements CommandLineRunner {
         KontnaGrupa kg31 = new KontnaGrupa();
         kg31.setBrojKonta("31");
         kg31.setNazivKonta("Naziv kontne grupe 31");
+        KontnaGrupa kg311 = new KontnaGrupa();
+        kg311.setBrojKonta("311");
+        kg311.setNazivKonta("Naziv kontne grupe 311");
         KontnaGrupa kg32 = new KontnaGrupa();
         kg32.setBrojKonta("32");
         kg32.setNazivKonta("Naziv kontne grupe 32");
+        KontnaGrupa kg321 = new KontnaGrupa();
+        kg321.setBrojKonta("321");
+        kg321.setNazivKonta("Naziv kontne grupe 321");
         KontnaGrupa kg33 = new KontnaGrupa();
         kg33.setBrojKonta("33");
         kg33.setNazivKonta("Naziv kontne grupe 33");
+        KontnaGrupa kg331 = new KontnaGrupa();
+        kg331.setBrojKonta("331");
+        kg331.setNazivKonta("Naziv kontne grupe 331");
         KontnaGrupa kg34 = new KontnaGrupa();
         kg34.setBrojKonta("34");
         kg34.setNazivKonta("Naziv kontne grupe 34");
+        KontnaGrupa kg341 = new KontnaGrupa();
+        kg341.setBrojKonta("341");
+        kg341.setNazivKonta("Naziv kontne grupe 341");
         KontnaGrupa kg35 = new KontnaGrupa();
         kg35.setBrojKonta("35");
         kg35.setNazivKonta("Naziv kontne grupe 35");
-        this.kontnaGrupaRepository.saveAll(Arrays.asList(kg3t, kg30, kg301, kg302, kg306, kg309, kg31, kg32, kg33, kg34, kg35));
+        KontnaGrupa kg351 = new KontnaGrupa();
+        kg351.setBrojKonta("351");
+        kg351.setNazivKonta("Naziv kontne grupe 351");
+        this.kontnaGrupaRepository.saveAll(Arrays.asList(kg3t, kg30, kg301, kg302, kg306, kg309, kg31,kg311, kg32, kg321, kg33,kg331, kg34,kg341, kg35, kg351));
 
 
         KontnaGrupa kg5t = new KontnaGrupa();
@@ -276,12 +248,18 @@ public class BootstrapData implements CommandLineRunner {
         KontnaGrupa kg50 = new KontnaGrupa();
         kg50.setBrojKonta("50");
         kg50.setNazivKonta("Naziv kontne grupe 50");
+        KontnaGrupa kg501 = new KontnaGrupa();
+        kg501.setBrojKonta("501");
+        kg501.setNazivKonta("Naziv kontne grupe 501");
         KontnaGrupa kg521 = new KontnaGrupa();
         kg521.setBrojKonta("521");
         kg521.setNazivKonta("Naziv kontne grupe 521");
         KontnaGrupa kg62 = new KontnaGrupa();
         kg62.setBrojKonta("62");
         kg62.setNazivKonta("Naziv kontne grupe 62");
+        KontnaGrupa kg621 = new KontnaGrupa();
+        kg621.setBrojKonta("621");
+        kg621.setNazivKonta("Naziv kontne grupe 621");
         KontnaGrupa kg60 = new KontnaGrupa();
         kg60.setBrojKonta("60");
         kg60.setNazivKonta("Naziv kontne grupe 60");
@@ -303,7 +281,7 @@ public class BootstrapData implements CommandLineRunner {
         kg611.setNazivKonta("Naziv kontne grupe 511");
 
 
-        this.kontnaGrupaRepository.saveAll(Arrays.asList(kg5t,kg51,kg511,kg52,kg50,kg521,kg5t,kg51,kg511,kg62,kg60,kg601,kg6t,kg61,kg611));
+        this.kontnaGrupaRepository.saveAll(Arrays.asList(kg5t,kg51,kg511,kg52,kg521,kg50,kg501,kg521,kg5t,kg51,kg511,kg62,kg621,kg60,kg601,kg6t,kg61,kg611));
         this.kontnaGrupaRepository.saveAll(Arrays.asList(kg3t, kg30, kg301, kg302, kg306, kg309, kg31, kg32, kg33, kg34, kg35));
 
         Knjizenje knj1 = new Knjizenje();
@@ -327,29 +305,6 @@ public class BootstrapData implements CommandLineRunner {
         this.knjizenjeRepository.save(knj3);
         this.knjizenjeRepository.save(knj4);
 
-        Konto k1 = createKonto(kg1, knj1, 1299.0, 900.0);
-        Konto k2 = createKonto(kg2, knj2, 1300.0, 848.0);
-        Konto k3 = createKonto(kg3, knj3, 700.0, 940.0);
-        Konto k4 = createKonto(kg4, knj4, 1000.0, 504.0);
-        Konto k5 = createKonto(kg5, knj1, 1003.0, 203.0);
-        Konto k6 = createKonto(kg6, knj2, 200.0, 504.0);
-        Konto k7 = createKonto(kg7, knj4, 2311.0, 2003.0);
-        Konto k8 = createKonto(kg8, knj3, 100.0, 504.0);
-        Konto k9 = createKonto(kg9, knj2, 450.0, 304.0);
-        Konto k10 = createKonto(kg10, knj3, 1030.0, 584.0);
-        Konto k11 = createKonto(kg11, knj3, 1020.0, 704.0);
-        Konto k12 = createKonto(kg12, knj3, 1700.0, 1504.0);
-        Konto k13 = createKonto(kg1, knj4, 1090.0, 1004.0);
-        Konto k14 = createKonto(kg1, knj4, 1200.0, 1504.0);
-        Konto k15 = createKonto(kg11, knj4, 1430.0, 1594.0);
-        Konto k16 = createKonto(kg8, knj4, 1000.0, 504.0);
-        Konto k17 = createKonto(kg13, knj4, 1090.0, 1004.0);
-        Konto k18 = createKonto(kg14, knj4, 1200.0, 1504.0);
-        Konto k19 = createKonto(kg15, knj4, 1430.0, 1594.0);
-        Konto k20 = createKonto(kg16, knj4, 1000.0, 504.0);
-
-        this.kontoRepository.saveAll(Arrays.asList(k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16, k17, k18, k19, k20));
-
         Knjizenje knj2020 = new Knjizenje();
         Calendar calendar = Calendar.getInstance();
         calendar.set(2020, 5, 5);
@@ -366,50 +321,48 @@ public class BootstrapData implements CommandLineRunner {
         knj2021.setBrojNaloga("N2020FF");
         this.knjizenjeRepository.save(knj2021);
 
-        Konto k3t = createKonto(kg3t, knj2020, 1299.0, 900.0);
-        Konto k30 = createKonto(kg30, knj2020, 1300.0, 848.0);
+        Konto k30 = createKonto(kg301, knj2020, 1300.0, 848.0);
         Konto k301 = createKonto(kg301, knj2020, 700.0, 940.0);
         Konto k302 = createKonto(kg302, knj2020, 1000.0, 504.0);
         Konto k306 = createKonto(kg306, knj2020, 1003.0, 203.0);
         Konto k309 = createKonto(kg309, knj2020, 200.0, 504.0);
-        Konto k31 = createKonto(kg31, knj2020, 2311.0, 2003.0);
-        Konto k32 = createKonto(kg32, knj2020, 100.0, 504.0);
-        Konto k33 = createKonto(kg33, knj2020, 450.0, 304.0);
-        Konto k34 = createKonto(kg34, knj2020, 1030.0, 584.0);
-        Konto k35 = createKonto(kg35, knj2020, 1020.0, 704.0);
-        Konto k3t2 = createKonto(kg3, knj2021, 1700.0, 1504.0);
+        Konto k31 = createKonto(kg311, knj2020, 2311.0, 2003.0);
+        Konto k32 = createKonto(kg321, knj2020, 100.0, 504.0);
+        Konto k33 = createKonto(kg331, knj2020, 450.0, 304.0);
+        Konto k34 = createKonto(kg341, knj2020, 1030.0, 584.0);
+        Konto k35 = createKonto(kg351, knj2020, 1020.0, 704.0);
+        Konto k3t2 = createKonto(kg311, knj2021, 1700.0, 1504.0);
         Konto k3012 = createKonto(kg301, knj2021, 1090.0, 1004.0);
         Konto k3022 = createKonto(kg302, knj2021, 1200.0, 1504.0);
         Konto k3062 = createKonto(kg306, knj2021, 1430.0, 1594.0);
         Konto k3092 = createKonto(kg309, knj2021, 1000.0, 504.0);
-        Konto k312 = createKonto(kg31, knj2021, 1090.0, 1004.0);
-        Konto k322 = createKonto(kg32, knj2021, 1200.0, 1504.0);
-        Konto k332 = createKonto(kg33, knj2021, 1430.0, 1594.0);
-        Konto k342 = createKonto(kg34, knj2021, 1000.0, 504.0);
+        Konto k312 = createKonto(kg311, knj2021, 1090.0, 1004.0);
+        Konto k322 = createKonto(kg321, knj2021, 1200.0, 1504.0);
+        Konto k332 = createKonto(kg331, knj2021, 1430.0, 1594.0);
+        Konto k342 = createKonto(kg341, knj2021, 1000.0, 504.0);
 
-        Konto k5t = createKonto(kg5,knj2020,1299.0, 900.0);
-        Konto k51 = createKonto(kg51,knj2020,1300.0, 848.0);
+        Konto k51 = createKonto(kg511,knj2020,1300.0, 848.0);
         Konto k511 = createKonto(kg511,knj2020,700.0, 940.0);
-        Konto k52 = createKonto(kg52,knj2020,1000.0, 504.0);
-        Konto k50 = createKonto(kg50,knj2020,1003.0, 203.0);
+        Konto k52 = createKonto(kg521,knj2020,1000.0, 504.0);
+        Konto k50 = createKonto(kg501,knj2020,1003.0, 203.0);
         Konto k521 = createKonto(kg521,knj2020,200.0, 504.0);
-        Konto k62 = createKonto(kg62,knj2020,1030.0, 584.0);
-        Konto k60 = createKonto(kg60,knj2020,1020.0, 704.0);
+        Konto k62 = createKonto(kg621,knj2020,1030.0, 584.0);
+        Konto k60 = createKonto(kg601,knj2020,1020.0, 704.0);
         Konto k601 = createKonto(kg601,knj2020,1700.0, 1504.0);
-        Konto k5t2 = createKonto(kg5,knj2021,1299.0, 900.0);
-        Konto k512 = createKonto(kg51,knj2021,1500.0, 848.0);
+        Konto k5t2 = createKonto(kg511,knj2021,1299.0, 900.0);
+        Konto k512 = createKonto(kg511,knj2021,1500.0, 848.0);
         Konto k5112 = createKonto(kg511,knj2021,700.0, 940.0);
-        Konto k522 = createKonto(kg52,knj2021,1000.0, 504.0);
-        Konto k502 = createKonto(kg50,knj2021,1203.0, 203.0);
+        Konto k522 = createKonto(kg521,knj2021,1000.0, 504.0);
+        Konto k502 = createKonto(kg501,knj2021,1203.0, 203.0);
         Konto k5212 = createKonto(kg521,knj2021,200.0, 504.0);
-        Konto k622 = createKonto(kg62,knj2021,1030.0, 584.0);
-        Konto k602 = createKonto(kg60,knj2021,1020.0, 704.0);
+        Konto k622 = createKonto(kg621,knj2021,1030.0, 584.0);
+        Konto k602 = createKonto(kg601,knj2021,1020.0, 704.0);
         Konto k6012 = createKonto(kg601,knj2021,1700.0, 1504.0);
 
-        this.kontoRepository.saveAll(Arrays.asList(k5t,k51,k511,k52,k50,k521,k5t,k51,k511,k62,k60,k601,k5t2,k512,k5112,k522,k502,k5212,k5t2,k512,k5112,k622,k602,k6012));
-        this.kontoRepository.saveAll(Arrays.asList(k3t, k30, k301, k302, k306, k309, k31, k32, k33, k34, k35));
-        this.kontoRepository.saveAll(Arrays.asList(k3t2, k302, k3012, k3022, k3062, k3092, k312, k322, k332, k342));
-        this.kontoRepository.saveAll(Arrays.asList(k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16, k17, k18, k19, k20));
+        this.kontoRepository.saveAll(Arrays.asList(
+                k30,k301,k302,k306,k309,k31,k32,k33,k34,k35,k3t2,k3012,k3022,k3062,k3092,k312,k322,k332,k342,
+                k51,k511,k52,k50,k521,k62,k60,k601,k5t2,k512,k5112,k522,k502,k5212,k622,k602,k6012));
+        //this.kontoRepository.saveAll(Arrays.asList(k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16, k17, k18, k19, k20));
 
         Konto konto1 = new Konto();
         konto1.setDuguje(1000.0);

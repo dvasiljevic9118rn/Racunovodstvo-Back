@@ -30,6 +30,9 @@ public class KontoService implements IService<Konto, Long> {
 
     @Override
     public Konto save(Konto konto) {
+        if(konto.getKontnaGrupa().getBrojKonta().length() < 3){
+            throw new RuntimeException("nije moguce kreirati konto na Kontne grupe duzine manje od 3");
+        }
         return kontoRepository.save(konto);
     }
 
