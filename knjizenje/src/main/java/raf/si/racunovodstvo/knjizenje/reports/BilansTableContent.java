@@ -10,23 +10,29 @@ import java.util.stream.Collectors;
 
 
 public class BilansTableContent {
-    public static final List<String> BILANS_COLUMNS_SINGLE_PERIOD = List.of("Konto", "Stavki", "Naziv", "Duguje", "Potrazuje", "Saldo");
-    public static final List<String> BILANS_COLUMNS_MULTIPLE_PERIODS = List.of("Konto", "Stavki", "Naziv");
+    public static final List<String> BILANS_COLUMNS_SINGLE_PERIOD = new ArrayList<String>(List.of("Konto", "Stavki", "Naziv", "Duguje", "Potrazuje", "Saldo"));
+    public static final List<String> BILANS_COLUMNS_MULTIPLE_PERIODS = new ArrayList<String>(List.of("Konto", "Stavki", "Naziv"));
     private List<List<String>> rows;
     private List<String> columns;
 
     private String sums;
 
     private String generateBalansUspeha(List<BilansResponse> bilansResponseList) {
-        Double rashodi = bilansResponseList
+        List<BilansResponse> bilansRashodiList = bilansResponseList
                 .stream()
-                .filter(bilansResponse -> bilansResponse.getBrojKonta().equals("5")).collect(Collectors.toList()).get(0).getSaldo();
+                .filter(bilansResponse -> bilansResponse.getBrojKonta().equals("5"))
+                .collect(Collectors.toList());
 
-        Double prihodi = bilansResponseList
+        Double rashodi = bilansRashodiList.size() == 0 ? 0: bilansRashodiList.get(0).getSaldo();
+
+        List<BilansResponse> bilansPrihodiList = bilansResponseList
                 .stream()
-                .filter(bilansResponse -> bilansResponse.getBrojKonta().equals("5")).collect(Collectors.toList()).get(0).getSaldo();
+                .filter(bilansResponse -> bilansResponse.getBrojKonta().equals("6"))
+                .collect(Collectors.toList());
 
-        return String.format("Ukupni prihodi: %d, Ukupni rashodi: %d, Balans uspeha %d", prihodi,rashodi,prihodi-rashodi);
+        Double prihodi = bilansPrihodiList.size() == 0 ? 0: bilansRashodiList.get(0).getSaldo();
+
+        return String.format("Ukupni prihodi: %1$,.2f, Ukupni rashodi: %1$,.2f, Balans uspeha %1$,.2f", prihodi,rashodi,prihodi-rashodi);
     }
     private String generateSumsString(List<BilansResponse> bilansResponseList) {
         Long brojStavki = 0L;
