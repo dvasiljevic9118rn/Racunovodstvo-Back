@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 
 public class BilansTableContent {
-    public static final List<String> BILANS_COLUMNS_SINGLE_PERIOD = new ArrayList<String>(List.of("Konto", "Stavki", "Naziv", "Duguje", "Potrazuje", "Saldo"));
-    public static final List<String> BILANS_COLUMNS_MULTIPLE_PERIODS = new ArrayList<String>(List.of("Konto", "Stavki", "Naziv"));
+    public static final List<String> BILANS_COLUMNS_SINGLE_PERIOD = new ArrayList<String>(List.of("Konto", "Naziv", "Duguje", "Potrazuje", "Saldo"));
+    public static final List<String> BILANS_COLUMNS_MULTIPLE_PERIODS = new ArrayList<String>(List.of("Konto", "Naziv"));
     private List<List<String>> rows;
     private List<String> columns;
 
@@ -47,9 +47,7 @@ public class BilansTableContent {
                 saldo += bilansResponse.getSaldo();
             }
         }
-        return "Ukupno stavki: "
-                + brojStavki
-                + " | Duguje ukupno: "
+        return "Duguje ukupno: "
                 + duguje
                 + " | Potrazuje ukupno: "
                 + potrazuje
