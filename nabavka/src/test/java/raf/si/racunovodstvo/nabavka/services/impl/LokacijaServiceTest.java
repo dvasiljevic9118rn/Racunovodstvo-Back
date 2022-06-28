@@ -4,9 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import raf.si.racunovodstvo.nabavka.model.Kalkulacija;
 import raf.si.racunovodstvo.nabavka.model.Lokacija;
 import raf.si.racunovodstvo.nabavka.repositories.LokacijaRepository;
+import raf.si.racunovodstvo.nabavka.requests.KalkulacijaRequest;
+import raf.si.racunovodstvo.nabavka.responses.KalkulacijaResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,5 +70,25 @@ class LokacijaServiceTest {
         given(lokacijaRepository.findByLokacijaId(MOCK_ID)).willReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> lokacijaService.deleteById(MOCK_ID));
         then(lokacijaRepository).should(never()).deleteById(MOCK_ID);
+    }
+
+    @Test
+    void updateTest() {
+        Lokacija lokacija = new Lokacija();
+        lokacija.setLokacijaId(MOCK_ID);
+        given(lokacijaRepository.findByLokacijaId(MOCK_ID)).willReturn(Optional.of(lokacija));
+        given(lokacijaRepository.save(lokacija)).willReturn(lokacija);
+
+        assertEquals(lokacija, lokacijaService.update(lokacija));
+    }
+
+    @Test
+    void updateExceptionTest() {
+        Lokacija lokacija = new Lokacija();
+        lokacija.setLokacijaId(MOCK_ID);
+        given(lokacijaRepository.findByLokacijaId(MOCK_ID)).willReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> lokacijaService.update(lokacija));
+        then(lokacijaRepository).should(never()).save(lokacija);
     }
 }

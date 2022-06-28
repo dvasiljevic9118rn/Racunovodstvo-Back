@@ -46,14 +46,17 @@ class KonverzijaRestControllerTest {
     }
 
     @Test
-    void createKonverzija() {
+    void createKonverzijaTest() {
         KonverzijaRequest konverzija = new KonverzijaRequest();
         konverzija.setDobavljacId(MOCK_ID);
         given(preduzeceFeignClient.getPreduzeceById(MOCK_ID, "")).willReturn(ResponseEntity.ok(new PreduzeceResponse()));
         ResponseEntity<?> responseEntity = konverzijaRestController.createKonverzija(konverzija, "");
         assertEquals(200, responseEntity.getStatusCodeValue());
     }
-
+    @Test
+    void getPreduzeceByIdTest() {
+        assertEquals(konverzijaRestController.getPreduzeceById(null,""),null);
+    }
     @Test
     void deleteKonverzija() {
         Konverzija konverzija = new Konverzija();

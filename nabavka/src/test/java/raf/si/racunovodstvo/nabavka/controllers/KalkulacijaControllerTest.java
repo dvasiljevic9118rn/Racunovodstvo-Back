@@ -15,6 +15,8 @@ import raf.si.racunovodstvo.nabavka.responses.KalkulacijaResponse;
 import raf.si.racunovodstvo.nabavka.services.IKalkulacijaService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -38,6 +40,48 @@ class KalkulacijaControllerTest {
 
         assertEquals(kalkulacijaResponsePage, response.getBody());
     }
+    @Test
+    void searchKalkulacijaTestWithSearch() {
+        Page<KalkulacijaResponse> kalkulacijaResponsePage = new PageImpl<>(new ArrayList<>());
+        given(kalkulacijaService.findAll(any(), any())).willReturn(kalkulacijaResponsePage);
+
+        ResponseEntity<Page<KalkulacijaResponse>> response = kalkulacijaController.searchKalkulacija("id<1",0, 1, new String[]{});
+
+        assertEquals(kalkulacijaResponsePage, response.getBody());
+    }
+
+    @Test
+    void searchKalkulacijaTest() {
+        Page<KalkulacijaResponse> kalkulacijaResponsePage = new PageImpl<>(new ArrayList<>());
+        given(kalkulacijaService.findAll(any())).willReturn(kalkulacijaResponsePage);
+
+        ResponseEntity<Page<KalkulacijaResponse>> response = kalkulacijaController.searchKalkulacija("",0, 1, new String[]{});
+
+        assertEquals(kalkulacijaResponsePage, response.getBody());
+    }
+
+    @Test
+    void getTotalKalkulacijeTest() {
+        Map<String,Number> kalkulacijaResponsePage = new HashMap<>();
+        given(kalkulacijaService.getTotalKalkulacije(any())).willReturn(kalkulacijaResponsePage);
+
+        ResponseEntity<?> response = kalkulacijaController.getTotalKalkulacije("", 0, 1, new String[]{});
+
+        assertEquals(kalkulacijaResponsePage, response.getBody());
+    }
+    @Test
+    void getTotalKalkulacijeTestWithSearch() {
+        Map<String,Number> kalkulacijaResponsePage = new HashMap<>();
+        given(kalkulacijaService.getTotalKalkulacije(any())).willReturn(kalkulacijaResponsePage);
+
+        Page<Kalkulacija> kalkulacijaResponseAllPage = new PageImpl<>(new ArrayList<>());
+        given(kalkulacijaService.findAllKalkulacije(any(),any())).willReturn(kalkulacijaResponseAllPage);
+
+        ResponseEntity<?> response = kalkulacijaController.getTotalKalkulacije("id<3", 0, 1, new String[]{});
+
+        assertEquals(kalkulacijaResponsePage, response.getBody());
+    }
+
 
     @Test
     void findAllSizeOutOfBoundsTest() {

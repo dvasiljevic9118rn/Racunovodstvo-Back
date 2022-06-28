@@ -40,6 +40,16 @@ class ArtikalControllerTest {
     }
 
     @Test
+    void findAllTestWithSearch() {
+        Page<ArtikalResponse> artikalResponsePage = new PageImpl<>(new ArrayList<>());
+        given(iArtikalService.findAll(any(), any())).willReturn(artikalResponsePage);
+
+        ResponseEntity<Page<ArtikalResponse>> response = artikalController.findAll("id<=1", 0, 1, new String[]{});
+
+        assertEquals(artikalResponsePage, response.getBody());
+    }
+
+    @Test
     void findAllSizeOutOfBoundsTest() {
         assertThrows(IllegalArgumentException.class, () -> artikalController.findAll(null, 0, 0, new String[]{}));
     }
@@ -84,6 +94,26 @@ class ArtikalControllerTest {
         given(iArtikalService.findAllByIdKalkulacijaKonverzija(any(), any())).willReturn(artikalResponsePage);
 
         ResponseEntity<Page<ArtikalResponse>> response = artikalController.findAllForKonverzijaOrKalkulacija(0, 1, new String[]{}, 1L);
+
+        assertEquals(artikalResponsePage, response.getBody());
+    }
+
+    @Test
+    void findAllKalkulacijaArtikalTest() {
+        Page<ArtikalResponse> artikalResponsePage = new PageImpl<>(new ArrayList<>());
+        given(iArtikalService.findAllKalkulacijaArtikli(any())).willReturn(artikalResponsePage);
+
+        ResponseEntity<Page<ArtikalResponse>> response = artikalController.findAllKalkulacijaArtikal(null,0,1, new String[]{});
+
+        assertEquals(artikalResponsePage, response.getBody());
+    }
+
+    @Test
+    void findAllKalkulacijaArtikalTestWithSearch() {
+        Page<ArtikalResponse> artikalResponsePage = new PageImpl<>(new ArrayList<>());
+        given(iArtikalService.findAllKalkulacijaArtikli(any(), any())).willReturn(artikalResponsePage);
+
+        ResponseEntity<Page<ArtikalResponse>> response = artikalController.findAllKalkulacijaArtikal("id<1",0,1, new String[]{});
 
         assertEquals(artikalResponsePage, response.getBody());
     }

@@ -9,12 +9,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import raf.si.racunovodstvo.nabavka.converters.impl.ArtikalConverter;
 import raf.si.racunovodstvo.nabavka.converters.impl.ArtikalReverseConverter;
 import raf.si.racunovodstvo.nabavka.model.Artikal;
+import raf.si.racunovodstvo.nabavka.model.KalkulacijaArtikal;
+import raf.si.racunovodstvo.nabavka.model.Konverzija;
 import raf.si.racunovodstvo.nabavka.repositories.ArtikalRepository;
+import raf.si.racunovodstvo.nabavka.repositories.KalkulacijaArtikalRepository;
 import raf.si.racunovodstvo.nabavka.requests.ArtikalRequest;
 import raf.si.racunovodstvo.nabavka.responses.ArtikalResponse;
+import raf.si.racunovodstvo.nabavka.specifications.RacunSpecification;
+import raf.si.racunovodstvo.nabavka.specifications.SearchCriteria;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +35,13 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
+
+
 class ArtikalServiceTest {
+
+    private static final String MOCK_SEARCH_KEY = "MOCK_KEY";
+    private static final String MOCK_SEARCH_VALUE = "MOCK_VALUE";
+    private static final String MOCK_SEARCH_OPERATION = "MOCK_OPERATION";
 
     @InjectMocks
     private ArtikalService artikalService;
@@ -42,6 +54,9 @@ class ArtikalServiceTest {
 
     @Mock
     private ArtikalReverseConverter artikalReverseConverter;
+
+    @Mock
+    KalkulacijaArtikalRepository kalkulacijaArtikalRepository;
 
     private static final Long ARTIKAL_ID_MOCK = 1L;
 
@@ -63,6 +78,44 @@ class ArtikalServiceTest {
         artikalRequest.setArtikalId(ARTIKAL_ID_MOCK);
         ArtikalResponse artikalResponse = new ArtikalResponse();
         Artikal artikal = Mockito.mock(Artikal.class);
+        Optional<Artikal> optionalArtikal = Optional.of(artikal);
+        given(artikalRepository.findById(ARTIKAL_ID_MOCK)).willReturn(optionalArtikal);
+        given(artikalConverter.convert(artikalRequest)).willReturn(artikal);
+        given(artikalRepository.save(artikal)).willReturn(artikal);
+        given(artikalReverseConverter.convert(artikal)).willReturn(artikalResponse);
+
+        assertEquals(artikalResponse, artikalService.update(artikalRequest));
+    }
+
+    @Test
+    void updateTestAktivanZaProdaju() {
+        ArtikalRequest artikalRequest = new ArtikalRequest();
+        artikalRequest.setArtikalId(ARTIKAL_ID_MOCK);
+        artikalRequest.setAktivanZaProdaju(true);
+        ArtikalResponse artikalResponse = new ArtikalResponse();
+        KalkulacijaArtikal artikal = new KalkulacijaArtikal();
+        artikal.setArtikalId(ARTIKAL_ID_MOCK);
+        artikal.setIstorijaProdajneCene(new ArrayList<>());
+
+        Optional<Artikal> optionalArtikal = Optional.of(artikal);
+        given(artikalRepository.findById(ARTIKAL_ID_MOCK)).willReturn(optionalArtikal);
+        given(artikalConverter.convert(artikalRequest)).willReturn(artikal);
+        given(artikalRepository.save(artikal)).willReturn(artikal);
+        given(artikalReverseConverter.convert(artikal)).willReturn(artikalResponse);
+
+        assertEquals(artikalResponse, artikalService.update(artikalRequest));
+    }
+
+    @Test
+    void updateTestAktivanZaProdaju2() {
+        ArtikalRequest artikalRequest = new ArtikalRequest();
+        artikalRequest.setArtikalId(ARTIKAL_ID_MOCK);
+        artikalRequest.setAktivanZaProdaju(true);
+        ArtikalResponse artikalResponse = new ArtikalResponse();
+        KalkulacijaArtikal artikal = new KalkulacijaArtikal();
+        artikal.setArtikalId(ARTIKAL_ID_MOCK);
+        artikal.setIstorijaProdajneCene(new ArrayList<>());
+
         Optional<Artikal> optionalArtikal = Optional.of(artikal);
         given(artikalRepository.findById(ARTIKAL_ID_MOCK)).willReturn(optionalArtikal);
         given(artikalConverter.convert(artikalRequest)).willReturn(artikal);
@@ -112,6 +165,23 @@ class ArtikalServiceTest {
     }
 
     @Test
+    void findAllPageableSpecTest() {
+        Artikal artikal = Mockito.mock(Artikal.class);
+        ArtikalResponse artikalResponse = new ArtikalResponse();
+        Page<Artikal> artikalPage = new PageImpl<>(List.of(artikal));
+        Pageable pageable = Mockito.mock(Pageable.class);
+        Specification<Artikal> specification =
+                new RacunSpecification<>(new SearchCriteria(MOCK_SEARCH_KEY, MOCK_SEARCH_VALUE, MOCK_SEARCH_OPERATION));
+
+        given(artikalRepository.findAll(specification, pageable)).willReturn(artikalPage);
+        given(artikalReverseConverter.convert(artikal)).willReturn(artikalResponse);
+
+        Page<ArtikalResponse> result = artikalService.findAll(specification, pageable);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(artikalResponse, result.getContent().get(0));
+    }
+
+    @Test
     void findAllByIdKalkulacijaKonverzija() {
         Artikal artikal = Mockito.mock(Artikal.class);
         ArtikalResponse artikalResponse = new ArtikalResponse();
@@ -124,6 +194,38 @@ class ArtikalServiceTest {
         assertEquals(1, result.getTotalElements());
         assertEquals(artikalResponse, result.getContent().get(0));
     }
+
+    @Test
+    void findAllKalkulacijaArtikliTest() {
+        Artikal artikal = Mockito.mock(Artikal.class);
+        ArtikalResponse artikalResponse = new ArtikalResponse();
+        Page<Artikal> artikalPage = new PageImpl<>(List.of(artikal));
+        Pageable pageable = Mockito.mock(Pageable.class);
+        Specification<Artikal> specification =
+                new RacunSpecification<>(new SearchCriteria(MOCK_SEARCH_KEY, MOCK_SEARCH_VALUE, MOCK_SEARCH_OPERATION));
+
+        given(kalkulacijaArtikalRepository.findAll(specification, pageable)).willReturn(artikalPage);
+        given(artikalReverseConverter.convert(artikal)).willReturn(artikalResponse);
+
+        Page<ArtikalResponse> result = artikalService.findAllKalkulacijaArtikli(specification, pageable);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(artikalResponse, result.getContent().get(0));
+    }
+
+    @Test
+    void findAllKalkulacijaArtikliPagableTest() {
+        KalkulacijaArtikal artikal = Mockito.mock(KalkulacijaArtikal.class);
+        ArtikalResponse artikalResponse = new ArtikalResponse();
+        Page<KalkulacijaArtikal> artikalPage = new PageImpl<>(List.of(artikal));
+        Pageable pageable = Mockito.mock(Pageable.class);
+        given(kalkulacijaArtikalRepository.findAll(pageable)).willReturn(artikalPage);
+        given(artikalReverseConverter.convert(artikal)).willReturn(artikalResponse);
+
+        Page<ArtikalResponse> result = artikalService.findAllKalkulacijaArtikli(pageable);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(artikalResponse, result.getContent().get(0));
+    }
+
 
     @Test
     void findAllTest() {

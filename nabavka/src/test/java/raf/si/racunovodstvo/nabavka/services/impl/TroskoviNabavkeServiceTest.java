@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import raf.si.racunovodstvo.nabavka.model.Lokacija;
 import raf.si.racunovodstvo.nabavka.model.TroskoviNabavke;
 import raf.si.racunovodstvo.nabavka.repositories.TroskoviNabavkeRepository;
 
@@ -69,5 +70,25 @@ class TroskoviNabavkeServiceTest {
 
         assertThrows(EntityNotFoundException.class, () -> troskoviNabavkeService.deleteById(MOCK_ID));
         then(troskoviNabavkeRepository).should(never()).deleteById(MOCK_ID);
+    }
+
+    @Test
+    void updateTest() {
+        TroskoviNabavke troskoviNabavke = new TroskoviNabavke();
+        troskoviNabavke.setTroskoviNabavkeId(MOCK_ID);
+        given(troskoviNabavkeRepository.findById(MOCK_ID)).willReturn(Optional.of(troskoviNabavke));
+        given(troskoviNabavkeRepository.save(troskoviNabavke)).willReturn(troskoviNabavke);
+
+        assertEquals(troskoviNabavke, troskoviNabavkeService.update(troskoviNabavke));
+    }
+
+    @Test
+    void updateExceptionTest() {
+        TroskoviNabavke troskoviNabavke = new TroskoviNabavke();
+        troskoviNabavke.setTroskoviNabavkeId(MOCK_ID);
+        given(troskoviNabavkeRepository.findById(MOCK_ID)).willReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> troskoviNabavkeService.update(troskoviNabavke));
+        then(troskoviNabavkeRepository).should(never()).save(troskoviNabavke);
     }
 }

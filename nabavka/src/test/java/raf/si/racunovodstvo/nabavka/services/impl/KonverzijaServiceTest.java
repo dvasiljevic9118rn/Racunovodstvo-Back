@@ -11,20 +11,23 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import raf.si.racunovodstvo.nabavka.converters.impl.KonverzijaConverter;
 import raf.si.racunovodstvo.nabavka.converters.impl.KonverzijaRequestConverter;
-import raf.si.racunovodstvo.nabavka.model.Konverzija;
-import raf.si.racunovodstvo.nabavka.model.Lokacija;
-import raf.si.racunovodstvo.nabavka.model.TroskoviNabavke;
+import raf.si.racunovodstvo.nabavka.model.*;
+import raf.si.racunovodstvo.nabavka.repositories.ArtikalRepository;
 import raf.si.racunovodstvo.nabavka.repositories.KonverzijaRepository;
 import raf.si.racunovodstvo.nabavka.repositories.LokacijaRepository;
+import raf.si.racunovodstvo.nabavka.requests.KalkulacijaRequest;
 import raf.si.racunovodstvo.nabavka.requests.KonverzijaRequest;
 import raf.si.racunovodstvo.nabavka.requests.LokacijaRequest;
+import raf.si.racunovodstvo.nabavka.responses.KalkulacijaResponse;
 import raf.si.racunovodstvo.nabavka.responses.KonverzijaResponse;
+import raf.si.racunovodstvo.nabavka.responses.LokacijaResponse;
 import raf.si.racunovodstvo.nabavka.specifications.RacunSpecification;
 import raf.si.racunovodstvo.nabavka.specifications.SearchCriteria;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -43,6 +46,9 @@ class KonverzijaServiceTest {
 
     @Mock
     KonverzijaRepository konverzijaRepository;
+
+    @Mock
+    ArtikalRepository artikalRepository;
 
     @Mock
     LokacijaService lokacijaService;
@@ -66,6 +72,7 @@ class KonverzijaServiceTest {
     private TroskoviNabavke tn3;
 
     private static final Long MOCK_ID = 1L;
+    private static final Double MOCK_CENA = 30.0;
 
     private static final String MOCK_SEARCH_KEY = "MOCK_KEY";
     private static final String MOCK_SEARCH_VALUE = "MOCK_VALUE";
@@ -108,6 +115,10 @@ class KonverzijaServiceTest {
         konverzija.setDatum(new Date());
         konverzija.setFakturnaCena(0.0);
         konverzija.setNabavnaVrednost(0.0);
+
+        TroskoviNabavke troskoviNabavke = new TroskoviNabavke();
+        troskoviNabavke.setCena(MOCK_CENA);
+        konverzija.setTroskoviNabavke(List.of(troskoviNabavke));
     }
 
     @Test
@@ -128,7 +139,35 @@ class KonverzijaServiceTest {
     }
 
     @Test
-    void findAll() {
+    void saveKonverzija2() {
+        KonverzijaResponse konverzijaResponse = new KonverzijaResponse();
+
+        konverzija.getLokacija().setLokacijaId(MOCK_ID);
+
+        given(konverzijaRepository.save(konverzija)).willReturn(konverzija);
+        given(konverzijaConverter.convert(konverzija)).willReturn(konverzijaResponse);
+        given(konverzijaRequestConverter.convert(konverzijaRequest)).willReturn(konverzija);
+
+        given(lokacijaService.findById(lokacija.getLokacijaId())).willReturn(Optional.of(lokacija));
+
+        assertEquals(konverzijaResponse, konverzijaService.saveKonverzija(konverzijaRequest));
+    }
+
+    @Test
+    void saveTest() {
+        given(konverzijaRepository.save(konverzija)).willReturn(konverzija);
+        assertEquals(konverzija, konverzijaService.save(konverzija));
+    }
+    @Test
+    void findByIdTest() {
+        Optional<Konverzija> optionalKonverzija = Optional.of(konverzija);
+
+        given(konverzijaRepository.findById(MOCK_ID)).willReturn(optionalKonverzija);
+        assertEquals(konverzija, konverzijaService.findById(MOCK_ID).get());
+    }
+
+    @Test
+    void findAllPagableSpecTest() {
         List<Konverzija> konverzijaList = new ArrayList<>();
         konverzijaList.add(konverzija);
         Pageable pageSort = PageRequest.of(0, 5, Sort.by(Sort.Order.asc("konverzijaId")));
@@ -145,4 +184,50 @@ class KonverzijaServiceTest {
         assertEquals(1, result.getTotalElements());
         assertEquals(konverzijaResponse, result.getContent().get(0));
     }
+    @Test
+    void findAllPagableTest() {
+        List<Konverzija> konverzijaList = new ArrayList<>();
+        konverzijaList.add(konverzija);
+        Pageable pageSort = PageRequest.of(0, 5, Sort.by(Sort.Order.asc("konverzijaId")));
+ KonverzijaResponse konverzijaResponse = new KonverzijaResponse();
+        List<Konverzija> konverzijaList1 = konverzijaList.stream().map(konerzija1 -> konverzija).collect(Collectors.toList());
+        Page<Konverzija> pageKonverzija = new PageImpl<>(konverzijaList1);
+        given(konverzijaRepository.findAll( pageSort)).willReturn(pageKonverzija);
+        given(konverzijaConverter.convert(konverzija)).willReturn(konverzijaResponse);
+
+        Page<KonverzijaResponse> result = konverzijaService.findAll( pageSort);
+
+        assertEquals(1, result.getTotalElements());
+        assertEquals(konverzijaResponse, result.getContent().get(0));
+    }
+
+
+    @Test
+    void findAll() {
+        List<Konverzija> konverzijaList = new ArrayList<>();
+        konverzijaList.add(konverzija);
+        given(konverzijaRepository.findAll()).willReturn(konverzijaList);
+
+        List<Konverzija> result = konverzijaService.findAll();
+
+        assertEquals(1, result.size());
+        assertEquals(konverzija, result.get(0));
+    }
+
+    @Test
+    void increaseNabavnaCenaTest(){
+        Optional<Konverzija> optionalKonverzija = Optional.of(konverzija);
+        given(konverzijaRepository.findById(MOCK_ID)).willReturn(optionalKonverzija);
+
+        KonverzijaArtikal artikal = new KonverzijaArtikal();
+        artikal.setUkupnaNabavnaVrednost(0.0);
+
+        given(konverzijaRepository.save(konverzija)).willReturn(konverzija);
+        Konverzija res = konverzijaService.increaseNabavnaCena(MOCK_ID, artikal);
+        assertEquals(konverzija, res);
+        assertEquals(MOCK_CENA,res.getNabavnaVrednost());
+
+    }
+
+
 }

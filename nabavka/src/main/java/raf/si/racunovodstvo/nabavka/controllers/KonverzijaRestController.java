@@ -46,7 +46,7 @@ public class KonverzijaRestController {
         this.searchUtil = new SearchUtil<>();
     }
 
-    private PreduzeceResponse getPreduzeceById(Long id, String token) {
+    public PreduzeceResponse getPreduzeceById(Long id, String token) {
         if (id == null) {
             return null;
         }

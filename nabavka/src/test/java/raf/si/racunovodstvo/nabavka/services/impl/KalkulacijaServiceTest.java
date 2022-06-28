@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import raf.si.racunovodstvo.nabavka.converters.impl.KalkulacijaConverter;
 import raf.si.racunovodstvo.nabavka.converters.impl.KalkulacijaReverseConverter;
 import raf.si.racunovodstvo.nabavka.model.Kalkulacija;
@@ -19,8 +20,7 @@ import raf.si.racunovodstvo.nabavka.responses.KalkulacijaResponse;
 
 import javax.persistence.EntityNotFoundException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -115,6 +115,47 @@ class KalkulacijaServiceTest {
     }
 
     @Test
+    void findAllPageableWithSpecTest() {
+        Kalkulacija kalkulacija = Mockito.mock(Kalkulacija.class);
+        Page<Kalkulacija> kalkulacijaPage = new PageImpl<>(List.of(kalkulacija));
+        KalkulacijaResponse kalkulacijaResponse = new KalkulacijaResponse();
+        Pageable pageable = Mockito.mock(Pageable.class);
+        Specification<Kalkulacija> spec = Mockito.mock(Specification.class);
+        given(kalkulacijaRepository.findAll(spec,pageable)).willReturn(kalkulacijaPage);
+        given(kalkulacijaReverseConverter.convert(kalkulacija)).willReturn(kalkulacijaResponse);
+
+        Page<KalkulacijaResponse> result = kalkulacijaService.findAll(spec,pageable);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(kalkulacijaResponse, result.getContent().get(0));
+    }
+
+    @Test
+    void findAllTest() {
+        Kalkulacija kalkulacija = Mockito.mock(Kalkulacija.class);
+        List<Kalkulacija> kalkulacijaList = List.of(kalkulacija);
+        Pageable pageable = Mockito.mock(Pageable.class);
+        given(kalkulacijaRepository.findAll()).willReturn(kalkulacijaList);
+
+        List<Kalkulacija> result = kalkulacijaService.findAll();
+        assertEquals(1, result.size());
+        assertEquals(kalkulacija, result.get(0));
+    }
+
+    @Test
+    void findAllKalkulacijeTest() {
+        Kalkulacija kalkulacija = Mockito.mock(Kalkulacija.class);
+        Page<Kalkulacija> kalkulacijaPage = new PageImpl<>(List.of(kalkulacija));
+        KalkulacijaResponse kalkulacijaResponse = new KalkulacijaResponse();
+        Pageable pageable = Mockito.mock(Pageable.class);
+        Specification<Kalkulacija> spec = Mockito.mock(Specification.class);
+        given(kalkulacijaRepository.findAll(spec,pageable)).willReturn(kalkulacijaPage);
+
+        Page<Kalkulacija> result = kalkulacijaService.findAllKalkulacije(spec, pageable);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(kalkulacijaPage, result);
+    }
+
+    @Test
     void increaseProdajnaAndNabavnaCenaTest() {
 
         KalkulacijaRequest kalkulacijaRequest = new KalkulacijaRequest();
@@ -147,5 +188,46 @@ class KalkulacijaServiceTest {
         given(kalkulacijaRepository.save(any(Kalkulacija.class))).willReturn(kalkulacija);
 
         assertEquals(kalkulacija, kalkulacijaService.save(kalkulacija));
+    }
+
+    @Test
+    void getTotalKalkulacijeTest() {
+        Kalkulacija kalkulacija = new Kalkulacija();
+
+        KalkulacijaArtikal artikal = new KalkulacijaArtikal();
+        artikal.setKolicina(1);
+        artikal.setRabat(0.0);
+        artikal.setNabavnaCena(0.0);
+        artikal.setNabavnaCenaPosleRabata(0.0);
+        artikal.setUkupnaNabavnaVrednost(0.0);
+        artikal.setMarza(0.0);
+        artikal.setProdajnaOsnovica(0.0);
+        artikal.setPorez(0.0);
+        artikal.setProdajnaCena(0.0);
+        artikal.setOsnovica(0.0);
+        artikal.setUkupnaProdajnaVrednost(0.0);
+
+        List<KalkulacijaArtikal> artikalList = new ArrayList<>();
+        artikalList.add(artikal);
+
+        kalkulacija.setArtikli(artikalList);
+
+        List<Kalkulacija> kalkulacijaList = new ArrayList<>();
+        kalkulacijaList.add(kalkulacija);
+
+        Map<String, Number> values = new HashMap<>();
+        values.put("totalKolicina", 1);
+        values.put("totalRabat", 0.0);
+        values.put("totalNabavnaCena", 0.0);
+        values.put("totalNabavnaCenaPosleRabata", 0.0);
+        values.put("totalNabavnaVrednost", 0.0);
+        values.put("totalMarza", 0.0);
+        values.put("totalOsnovicaZaProdaju", 0.0);
+        values.put("totalPorez", 0.0);
+        values.put("totalProdajnaCena", 0.0);
+        values.put("totalPoreskaOsnovica", 0.0);
+        values.put("totalProdajnaVrednost", 0.0);
+
+        assertEquals(values, kalkulacijaService.getTotalKalkulacije(kalkulacijaList));
     }
 }
